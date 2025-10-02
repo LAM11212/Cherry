@@ -1391,6 +1391,8 @@
     <None Include="shaders\light_cube.vs" />
     <None Include="shaders\basic_lighting.vs" />
     <None Include="shaders\basic_lighting.fs" />
+    <None Include="shaders\materials.vs" />
+    <None Include="shaders\materials.fs" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="dependencies\lib\glfw3.lib" />
@@ -1403,5 +1405,10 @@
   </ItemGroup>
   <ItemGroup>
     <Object Include="x64\Debug\openGL3D.obj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="textures\backroomswall.jpeg">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

@@ -595,6 +595,8 @@
     <None Include="shaders\colors.vs" />
     <None Include="shaders\light_cube.fs" />
     <None Include="shaders\light_cube.vs" />
+    <None Include="shaders\materials.fs" />
+    <None Include="shaders\materials.vs" />
     <None Include="x64\Debug\openGL3D.tlog\CL.command.1.tlog" />
     <None Include="x64\Debug\openGL3D.tlog\CL.read.1.tlog" />
     <None Include="x64\Debug\openGL3D.tlog\CL.write.1.tlog" />
@@ -617,6 +619,9 @@
   </ItemGroup>
   <ItemGroup>
     <Object Include="x64\Debug\openGL3D.obj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="textures\backroomswall.jpeg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
