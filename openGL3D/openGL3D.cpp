@@ -36,11 +36,17 @@ glm::vec3 lightPos(1.2f, 5.0f, 2.0f);
 //player settings
 glm::vec3 playerSize = glm::vec3(0.6f, 0.0f, 0.6f);
 
+enum class MaterialType {
+    SolidColor,
+    Flashing,
+    Textured
+};
 //world object vector
 struct WorldObject {
     glm::vec3 position;
     glm::vec3 scale;
     //unsigned int textureID;
+    MaterialType material;
 };
 
 // collision object
@@ -72,13 +78,18 @@ bool checkCollision(const AABB& a, const AABB& b) {
 }
 
 std::vector<WorldObject> worldObjects = {
-    {{0.0f, -1.0f, 0.0f }, {20.0f, 0.2f, 20.0f}}, // floor
-    {{10.0f, 3.0f, 0.0f }, {0.2f, 8.0f, 10.0f }},  // left wall
-    {{-10.0f, 3.0f, 0.0f}, {0.2f, 8.0f, 20.0f }}, // right wall
-    {{0.0f, 3.0f, -10.0f}, {20.0f, 8.0f, 0.2f }}, // front wall
-    {{ 0.0f, 3.0f, 10.0f}, {20.0f, 8.0f, 0.2f }}, // back wall
-    {{ 0.0f, 7.0f, 0.0f}, {20.0f, 0.2f, 20.0f}}, // ceiling
+    {{0.0f, -1.0f, 0.0f }, {20.0f, 0.2f, 20.0f}, MaterialType::Flashing }, // floor
+    {{10.0f, 3.0f, 0.0f }, {0.2f, 8.0f, 10.0f }, MaterialType::Flashing },  // left wall
+    {{-10.0f, 3.0f, 0.0f}, {0.2f, 8.0f, 20.0f }, MaterialType::Flashing }, // right wall
+    {{0.0f, 3.0f, -10.0f}, {20.0f, 8.0f, 0.2f }, MaterialType::Flashing }, // front wall
+    {{ 0.0f, 3.0f, 10.0f}, {20.0f, 8.0f, 0.2f }, MaterialType::Flashing }, // back wall
+    {{ 0.0f, 7.0f, 0.0f }, {20.0f, 0.2f, 20.0f}, MaterialType::Flashing }, // ceiling
+    {{20.0f, -1.0f, 0.0f}, {20.0f, 0.2f, 20.0f}, MaterialType::SolidColor}
 };
+
+// shaders
+// -------
+Shader* renderShaders(WorldObject obj, Shader& lightingShader, Shader& basicLightingShader);
 
 int main()
 {
@@ -122,9 +133,10 @@ int main()
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
 
-    // build and compile our shader zprogram
-    // ------------------------------------
+    // shaders
+    // -------
     Shader lightingShader("shaders/materials.vs", "shaders/materials.fs");
+    Shader basicLightingShader("shaders/basic_lighting.vs", "shaders/basic_lighting.fs");
     Shader lightCubeShader("shaders/light_cube.vs", "shaders/light_cube.fs");
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
@@ -236,26 +248,7 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // be sure to activate shader when setting uniforms/drawing objects
-        lightingShader.use();
-		lightingShader.setVec3("light.position", lightPos);
-        lightingShader.setVec3("viewPos", camera.Position);
-
-        glm::vec3 lightColor;
-        lightColor.x = sin(glfwGetTime() * 2.0f);
-        lightColor.y = sin(glfwGetTime() * 0.7f);
-        lightColor.z = sin(glfwGetTime() * 1.3f);
-
-        glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f);
-        glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f);
-
-        lightingShader.setVec3("light.ambient", ambientColor);
-        lightingShader.setVec3("light.diffuse", diffuseColor);
-        lightingShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-
-		lightingShader.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
-        lightingShader.setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
-        lightingShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
-        lightingShader.setFloat("material.shininess", 32.0f);
+		
 
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -263,14 +256,26 @@ int main()
         lightingShader.setMat4("projection", projection);
         lightingShader.setMat4("view", view);
 
+        lightingShader.use();
+        lightingShader.setMat4("projection", projection);
+        lightingShader.setMat4("view", view);
+
+        basicLightingShader.use();
+        basicLightingShader.setMat4("projection", projection);
+        basicLightingShader.setMat4("view", view);
+
         // custom view/projection transformations
         for (auto& obj : worldObjects) {
-            glm::mat4 model = glm::mat4(1.0f);
-			model = glm::translate(model, obj.position);
-            model = glm::scale(model, obj.scale);
-			lightingShader.setMat4("model", model);
-			glBindVertexArray(cubeVAO);
-			glDrawArrays(GL_TRIANGLES, 0, 36);
+			Shader* activeShader = renderShaders(obj, lightingShader, basicLightingShader);
+
+            if (activeShader) {
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::translate(model, obj.position);
+                model = glm::scale(model, obj.scale);
+                activeShader->setMat4("model", model);
+                glBindVertexArray(cubeVAO);
+                glDrawArrays(GL_TRIANGLES, 0, 36);
+            }
         }
 
         // world transformation
@@ -365,5 +370,43 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     camera.ProcessMouseScroll(static_cast<float>(yoffset));
+}
+
+Shader* renderShaders(WorldObject obj, Shader& lightingShader, Shader& basicLightingShader) {
+    Shader* activeShader = nullptr;
+    if (obj.material == MaterialType::Flashing) {
+        activeShader = &lightingShader;
+        activeShader->use();
+        activeShader->setVec3("light.position", lightPos);
+        activeShader->setVec3("viewPos", camera.Position);
+
+        glm::vec3 lightColor;
+        lightColor.x = sin(glfwGetTime() * 2.0f);
+        lightColor.y = sin(glfwGetTime() * 0.7f);
+        lightColor.z = sin(glfwGetTime() * 1.3f);
+
+        glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f);
+        glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f);
+
+        activeShader->setVec3("light.ambient", ambientColor);
+        activeShader->setVec3("light.diffuse", diffuseColor);
+        activeShader->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+
+        activeShader->setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
+        activeShader->setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+        activeShader->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+        activeShader->setFloat("material.shininess", 32.0f);
+        return activeShader;
+	}
+    else if (obj.material == MaterialType::SolidColor) {
+        activeShader = &basicLightingShader;
+        activeShader->use();
+        activeShader->setVec3("lightPos", glm::vec3(lightPos.x, lightPos.y, lightPos.z - 10));
+        activeShader->setVec3("lightColor", 0.5f, 0.5f, 0.5f);
+        activeShader->setVec3("objectColor", 1.0f, 0.5f, 0.31f);
+        activeShader->setVec3("viewPos", camera.Position);
+        return activeShader;
+    }
+    
 }
 
