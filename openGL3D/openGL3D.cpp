@@ -33,17 +33,47 @@ float lastFrame = 0.0f;
 // lighting
 glm::vec3 lightPos(1.2f, 5.0f, 2.0f);
 
+//player settings
+glm::vec3 playerSize = glm::vec3(0.6f, 0.0f, 0.6f);
+
 //world object vector
 struct WorldObject {
     glm::vec3 position;
     glm::vec3 scale;
     //unsigned int textureID;
-
 };
+
+// collision object
+struct AABB {
+    glm::vec3 min;
+    glm::vec3 max;
+};
+
+AABB getAABB(const WorldObject& obj) {
+    glm::vec3 half = obj.scale * 0.5f;
+    return {
+        obj.position - half,
+        obj.position + half
+    };
+}
+
+AABB getPlayerAABB() {
+    glm::vec3 half = playerSize * 0.5f;
+    return {
+        camera.Position - half,
+        camera.Position + half
+    };
+}
+
+bool checkCollision(const AABB& a, const AABB& b) {
+    return (a.min.x <= b.max.x && a.max.x >= b.min.x) &&
+        (a.min.y <= b.max.y && a.max.y >= b.min.y) &&
+        (a.min.z <= b.max.z && a.max.z >= b.min.z);
+}
 
 std::vector<WorldObject> worldObjects = {
     {{0.0f, -1.0f, 0.0f }, {20.0f, 0.2f, 20.0f}}, // floor
-    {{10.0f, 3.0f, 0.0f }, {0.2f, 8.0f, 20.0f }},  // left wall
+    {{10.0f, 3.0f, 0.0f }, {0.2f, 8.0f, 10.0f }},  // left wall
     {{-10.0f, 3.0f, 0.0f}, {0.2f, 8.0f, 20.0f }}, // right wall
     {{0.0f, 3.0f, -10.0f}, {20.0f, 8.0f, 0.2f }}, // front wall
     {{ 0.0f, 3.0f, 10.0f}, {20.0f, 8.0f, 0.2f }}, // back wall
@@ -180,14 +210,25 @@ int main()
         float currentFrame = static_cast<float>(glfwGetTime());
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
-
         // input
         // -----
+        // keep track of player AABB
+        glm::vec3 oldPos = camera.Position;
         processInput(window);
 
         // update physics
         // -----
 		camera.updatePhysics(deltaTime);
+
+        // check collisions
+        // ----------------
+		AABB playerBox = getPlayerAABB();
+        for (auto& obj : worldObjects) {
+            if (checkCollision(playerBox, getAABB(obj))) {
+                camera.Position = oldPos;
+                break;
+            }
+        }
 
         // render
         // ------
