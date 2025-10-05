@@ -143,6 +143,7 @@
     <ClCompile Include="imgui\imgui_tables.cpp" />
     <ClCompile Include="imgui\imgui_widgets.cpp" />
     <ClCompile Include="openGL3D.cpp" />
+    <ClCompile Include="stb_image.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera\camera.h" />
@@ -597,6 +598,9 @@
     <None Include="shaders\light_cube.vs" />
     <None Include="shaders\materials.fs" />
     <None Include="shaders\materials.vs" />
+    <None Include="shaders\lighting_map.fs" />
+    <None Include="shaders\lighting_map.vs" />
+    <None Include="shaders\temp.fs" />
     <None Include="x64\Debug\openGL3D.tlog\CL.command.1.tlog" />
     <None Include="x64\Debug\openGL3D.tlog\CL.read.1.tlog" />
     <None Include="x64\Debug\openGL3D.tlog\CL.write.1.tlog" />
@@ -622,6 +626,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="textures\backroomswall.jpeg" />
+    <Image Include="textures\container2.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
