@@ -91,7 +91,8 @@ std::vector<WorldObject> worldObjects = {
 	{{30.0f, 3.0f, 0.0f }, {0.2f, 8.0f, 20.0f }, MaterialType::SolidColor}, // left wall
     {{20.0f, 3.0f,-10.0f}, {20.0f, 8.0f, 0.2f }, MaterialType::SolidColor}, // front wall
 	{{20.0f, 7.0f, 0.0f }, {20.0f, 0.2f, 20.0f}, MaterialType::SolidColor}, // ceiling
-    {{20.0f, -1.0f, 20.0f},{20.0f, 0.2f, 20.0f}, MaterialType::Textured  }  // floor
+    {{20.0f, -1.0f, 20.0f},{20.0f, 0.2f, 20.0f}, MaterialType::Textured  }, // floor
+    {{10.0f, 3.0f, 20.0f}, {0.2f, 8.0f, 20.0f }, MaterialType::Textured  }  // right wall
 };
 
 // shaders
@@ -501,3 +502,5 @@ unsigned int loadTexture(char const* path) {
     }
     return textureID;
 }
+
+// working on a boring school project rn but we shall be back soon :p
