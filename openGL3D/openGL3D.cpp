@@ -93,8 +93,10 @@ std::vector<WorldObject> worldObjects = {
 	{{20.0f, 7.0f, 0.0f }, {20.0f, 0.2f, 20.0f}, MaterialType::SolidColor}, // ceiling
     {{20.0f, -1.0f,20.0f}, {20.0f, 0.2f, 20.0f}, MaterialType::Textured  }, // floor
     {{10.0f, 3.0f, 20.0f}, {0.2f, 8.0f, 20.0f }, MaterialType::Textured  }, // right wall
-    {{30.0f, 3.0f, 20.0f }, {0.2f, 8.0f, 20.0f }, MaterialType::Textured  },// left wall
-    {{20.0f, 7.0f, 20.0f }, {20.0f, 0.2f, 20.0f}, MaterialType::Textured}, // ceiling
+    {{30.0f, 3.0f, 20.0f }, {0.2f, 8.0f, 20.0f },MaterialType::Textured  }, // left wall
+    {{20.0f, 7.0f, 20.0f }, {20.0f, 0.2f, 20.0f},MaterialType::Textured  }, // ceiling
+    {{20.0f, 3.0f, 20.0f }, {20.0f, 8.0f, 0.2f },MaterialType::Textured  }  // back wall
+
 };
 
 // shaders
