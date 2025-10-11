@@ -592,6 +592,8 @@
     <None Include="dependencies\include\glm\gtx\wrap.inl" />
     <None Include="shaders\basic_lighting.fs" />
     <None Include="shaders\basic_lighting.vs" />
+    <None Include="shaders\bgShader.fs" />
+    <None Include="shaders\bgShader.vs" />
     <None Include="shaders\colors.fs" />
     <None Include="shaders\colors.vs" />
     <None Include="shaders\light_cube.fs" />
@@ -627,6 +629,7 @@
   <ItemGroup>
     <Image Include="textures\backroomswall.jpeg" />
     <Image Include="textures\container2.png" />
+    <Image Include="textures\liminalBG.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

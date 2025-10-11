@@ -80,6 +80,22 @@ bool checkCollision(const AABB& a, const AABB& b) {
         (a.min.z <= b.max.z && a.max.z >= b.min.z);
 }
 
+// background VAO/VBO
+unsigned int quadVAO = 0;
+unsigned int quadVBO;
+
+//BG vertices
+float quadVertices[] = {
+    // positions    // texCoords
+    -1.0f,  1.0f,   0.0f, 1.0f, // top-left
+    -1.0f, -1.0f,   0.0f, 0.0f, // bottom-left
+     1.0f, -1.0f,   1.0f, 0.0f, // bottom-right
+
+    -1.0f,  1.0f,   0.0f, 1.0f, // top-left
+     1.0f, -1.0f,   1.0f, 0.0f, // bottom-right
+     1.0f,  1.0f,   1.0f, 1.0f  // top-right
+};
+
 std::vector<WorldObject> worldObjects = {
     {{0.0f, -1.0f, 0.0f }, {20.0f, 0.2f, 20.0f}, MaterialType::Flashing  }, // floor
     {{10.0f, 3.0f, 0.0f }, {0.2f, 8.0f, 10.0f }, MaterialType::Flashing  }, // left wall
@@ -95,8 +111,7 @@ std::vector<WorldObject> worldObjects = {
     {{10.0f, 3.0f, 20.0f}, {0.2f, 8.0f, 20.0f }, MaterialType::Textured  }, // right wall
     {{30.0f, 3.0f, 20.0f }, {0.2f, 8.0f, 20.0f },MaterialType::Textured  }, // left wall
     {{20.0f, 7.0f, 20.0f }, {20.0f, 0.2f, 20.0f},MaterialType::Textured  }, // ceiling
-    {{20.0f, 3.0f, 20.0f }, {20.0f, 8.0f, 0.2f },MaterialType::Textured  }  // back wall
-
+    //{{20.0f, 3.0f, 20.0f }, {20.0f, 8.0f, 0.2f },MaterialType::Textured  }  // back wall
 };
 
 // shaders
@@ -151,6 +166,7 @@ int main()
     Shader basicLightingShader("shaders/basic_lighting.vs", "shaders/basic_lighting.fs");
     Shader lightCubeShader("shaders/light_cube.vs", "shaders/light_cube.fs");
     Shader lightingMap("shaders/lighting_map.vs", "shaders/lighting_map.fs");
+    Shader backgroundShader("shaders/bgShader.vs", "shaders/bgShader.fs");
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
@@ -230,6 +246,20 @@ int main()
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
+    // background VAO/VBO setup
+    glGenVertexArrays(1, &quadVAO);
+    glGenBuffers(1, &quadVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), quadVertices, GL_STATIC_DRAW);
+	glBindVertexArray(quadVAO);
+
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+	glBindVertexArray(0);
+
+
     unsigned int diffuseMap = loadTexture("textures/backroomswall.jpeg");
     std::cout << "Loaded texture ID: " << diffuseMap << std::endl;
     if (diffuseMap == 0)
@@ -243,6 +273,8 @@ int main()
 	lightingMap.setInt("material.diffuse", 0);
 
     std::cout << "Texture ID: " << worldObjects.back().textureID << std::endl;
+
+    unsigned int bgTexture = loadTexture("textures/liminalBG.jpg");
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -274,8 +306,18 @@ int main()
 
         // render
         // ------
-        glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        glDisable(GL_DEPTH_TEST);
+
+        backgroundShader.use();
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, bgTexture);
+		backgroundShader.setInt("bgTexture", 0);
+        glBindVertexArray(quadVAO);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        glEnable(GL_DEPTH_TEST);
 
         // be sure to activate shader when setting uniforms/drawing objects
 		
@@ -467,7 +509,6 @@ Shader* renderShaders(WorldObject obj, Shader& lightingShader, Shader& basicLigh
         return activeShader;
     }
 }
-
 
 unsigned int loadTexture(char const* path) {
     unsigned int textureID;

@@ -1399,6 +1399,8 @@
     <None Include="shaders\lighting_map.fs" />
     <None Include="shaders\lighting_map.vs" />
     <None Include="shaders\temp.fs" />
+    <None Include="shaders\bgShader.fs" />
+    <None Include="shaders\bgShader.vs" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="dependencies\lib\glfw3.lib" />
@@ -1417,6 +1419,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="textures\container2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\liminalBG.jpg">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
