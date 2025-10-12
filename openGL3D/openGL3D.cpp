@@ -34,7 +34,7 @@ float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
 // lighting
-glm::vec3 lightPos(1.2f, 5.0f, 2.0f);
+glm::vec3 lightPos(15.2f, 5.0f, 15.0f);
 
 //player settings
 glm::vec3 playerSize = glm::vec3(0.6f, 0.0f, 0.6f);
@@ -116,7 +116,7 @@ std::vector<WorldObject> worldObjects = {
 
 // shaders
 // -------
-Shader* renderShaders(WorldObject obj, Shader& lightingShader, Shader& basicLightingShader, Shader& lightingMap);
+Shader* renderShaders(WorldObject obj, Shader& lightingShader, Shader& basicLightingShader, Shader& lightingMap, Shader& light_casters);
 
 int main()
 {
@@ -167,6 +167,7 @@ int main()
     Shader lightCubeShader("shaders/light_cube.vs", "shaders/light_cube.fs");
     Shader lightingMap("shaders/lighting_map.vs", "shaders/lighting_map.fs");
     Shader backgroundShader("shaders/bgShader.vs", "shaders/bgShader.fs");
+	Shader lightCasters("shaders/light_casters.vs", "shaders/light_casters.fs");
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
@@ -275,6 +276,8 @@ int main()
     std::cout << "Texture ID: " << worldObjects.back().textureID << std::endl;
 
     unsigned int bgTexture = loadTexture("textures/liminalBG.jpg");
+
+	std::cout << "BG Texture ID: " << bgTexture << std::endl;
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -311,16 +314,16 @@ int main()
         glDisable(GL_DEPTH_TEST);
 
         backgroundShader.use();
-        glActiveTexture(GL_TEXTURE0);
+        glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, bgTexture);
-		backgroundShader.setInt("bgTexture", 0);
+        backgroundShader.setInt("bgTexture", 1);
         glBindVertexArray(quadVAO);
         glDrawArrays(GL_TRIANGLES, 0, 6);
-
+        //glBindVertexArray(0);
         glEnable(GL_DEPTH_TEST);
 
         // be sure to activate shader when setting uniforms/drawing objects
-		
+	
 
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -340,9 +343,13 @@ int main()
 		lightingMap.setMat4("projection", projection);
 		lightingMap.setMat4("view", view);
 
+        lightCasters.use();
+		lightCasters.setMat4("projection", projection);
+		lightCasters.setMat4("view", view);
+
         // custom view/projection transformations
         for (auto& obj : worldObjects) {
-			Shader* activeShader = renderShaders(obj, lightingShader, basicLightingShader, lightingMap);
+			Shader* activeShader = renderShaders(obj, lightingShader, basicLightingShader, lightingMap, lightCasters);
             if (!activeShader) continue;
 
             if (activeShader) {
@@ -367,7 +374,6 @@ int main()
         glm::mat4 model = glm::mat4(1.0f);
         lightingShader.setMat4("model", model);
 
-        
 
         // also draw the lamp object
         lightCubeShader.use();
@@ -392,7 +398,9 @@ int main()
     // ------------------------------------------------------------------------
     glDeleteVertexArrays(1, &cubeVAO);
     glDeleteVertexArrays(1, &lightCubeVAO);
+    glDeleteVertexArrays(1, &quadVAO);
     glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &quadVBO);
 
     // glfw: terminate, clearing all previously allocated GLFW resources.
     // ------------------------------------------------------------------
@@ -459,7 +467,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
     camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }
 
-Shader* renderShaders(WorldObject obj, Shader& lightingShader, Shader& basicLightingShader, Shader& lightingMap) {
+Shader* renderShaders(WorldObject obj, Shader& lightingShader, Shader& basicLightingShader, Shader& lightingMap, Shader& light_casters) {
     Shader* activeShader = nullptr;
     if (obj.material == MaterialType::Flashing) {
         activeShader = &lightingShader;
@@ -495,13 +503,18 @@ Shader* renderShaders(WorldObject obj, Shader& lightingShader, Shader& basicLigh
         return activeShader;
     }
     else if (obj.material == MaterialType::Textured) {
-        activeShader = &lightingMap;
+        activeShader = &light_casters;
 		activeShader->use();
         activeShader->setVec3("light.position", lightPos);
         activeShader->setVec3("viewPos", camera.Position);
         activeShader->setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
 		activeShader->setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
 		activeShader->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+
+        // light drop off over distance vals
+        activeShader->setFloat("light.constant", 1.0f);
+		activeShader->setFloat("light.linear", 0.12f);
+		activeShader->setFloat("light.quadratic", 0.00064f);
 
 		activeShader->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
 		activeShader->setFloat("material.shininess", 32.0f);

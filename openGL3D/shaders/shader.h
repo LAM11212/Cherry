@@ -24,8 +24,6 @@ public:
 		std::ifstream vShaderFile;
 		std::ifstream fShaderFile;
 
-		std::cout << vertexPath << std::endl;
-
 		//throw exceptions:
 		vShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 		fShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);

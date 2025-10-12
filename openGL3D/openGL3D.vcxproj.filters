@@ -1401,6 +1401,8 @@
     <None Include="shaders\temp.fs" />
     <None Include="shaders\bgShader.fs" />
     <None Include="shaders\bgShader.vs" />
+    <None Include="shaders\light_casters.fs" />
+    <None Include="shaders\light_casters.vs" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="dependencies\lib\glfw3.lib" />
