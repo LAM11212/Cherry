@@ -596,6 +596,8 @@
     <None Include="shaders\bgShader.vs" />
     <None Include="shaders\colors.fs" />
     <None Include="shaders\colors.vs" />
+    <None Include="shaders\flashlight.fs" />
+    <None Include="shaders\flashlight.vs" />
     <None Include="shaders\light_casters.fs" />
     <None Include="shaders\light_casters.vs" />
     <None Include="shaders\light_cube.fs" />

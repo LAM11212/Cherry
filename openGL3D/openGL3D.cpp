@@ -116,7 +116,7 @@ std::vector<WorldObject> worldObjects = {
 
 // shaders
 // -------
-Shader* renderShaders(WorldObject obj, Shader& lightingShader, Shader& basicLightingShader, Shader& lightingMap, Shader& light_casters);
+Shader* renderShaders(WorldObject obj, Shader& lightingShader, Shader& basicLightingShader, Shader& lightingMap, Shader& light_casters, Shader& flashlight);
 
 int main()
 {
@@ -168,6 +168,7 @@ int main()
     Shader lightingMap("shaders/lighting_map.vs", "shaders/lighting_map.fs");
     Shader backgroundShader("shaders/bgShader.vs", "shaders/bgShader.fs");
 	Shader lightCasters("shaders/light_casters.vs", "shaders/light_casters.fs");
+    Shader flashlight("shaders/flashlight.vs", "shaders/flashlight.fs");
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
@@ -347,9 +348,13 @@ int main()
 		lightCasters.setMat4("projection", projection);
 		lightCasters.setMat4("view", view);
 
+        flashlight.use();
+		flashlight.setMat4("projection", projection);
+		flashlight.setMat4("view", view);
+
         // custom view/projection transformations
         for (auto& obj : worldObjects) {
-			Shader* activeShader = renderShaders(obj, lightingShader, basicLightingShader, lightingMap, lightCasters);
+			Shader* activeShader = renderShaders(obj, lightingShader, basicLightingShader, lightingMap, lightCasters, flashlight);
             if (!activeShader) continue;
 
             if (activeShader) {
@@ -376,16 +381,16 @@ int main()
 
 
         // also draw the lamp object
-        lightCubeShader.use();
-        lightCubeShader.setMat4("projection", projection);
-        lightCubeShader.setMat4("view", view);
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, lightPos);
-        model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
-        lightCubeShader.setMat4("model", model);
+        //lightCubeShader.use();
+        //lightCubeShader.setMat4("projection", projection);
+        //lightCubeShader.setMat4("view", view);
+        //model = glm::mat4(1.0f);
+        //model = glm::translate(model, lightPos);
+        //model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
+        //lightCubeShader.setMat4("model", model);
 
-        glBindVertexArray(lightCubeVAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        //glBindVertexArray(lightCubeVAO);
+        //glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
@@ -467,7 +472,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
     camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }
 
-Shader* renderShaders(WorldObject obj, Shader& lightingShader, Shader& basicLightingShader, Shader& lightingMap, Shader& light_casters) {
+Shader* renderShaders(WorldObject obj, Shader& lightingShader, Shader& basicLightingShader, Shader& lightingMap, Shader& light_casters, Shader& flashlight) {
     Shader* activeShader = nullptr;
     if (obj.material == MaterialType::Flashing) {
         activeShader = &lightingShader;
@@ -503,10 +508,13 @@ Shader* renderShaders(WorldObject obj, Shader& lightingShader, Shader& basicLigh
         return activeShader;
     }
     else if (obj.material == MaterialType::Textured) {
-        activeShader = &light_casters;
+        activeShader = &flashlight;
+
 		activeShader->use();
-        activeShader->setVec3("light.position", lightPos);
-        activeShader->setVec3("viewPos", camera.Position);
+        activeShader->setVec3("light.position", camera.Position);
+		activeShader->setVec3("light.direction", camera.Front);
+		activeShader->setFloat("light.cutOff", glm::cos(glm::radians(8.5f)));
+		activeShader->setFloat("light.outerCutOff", glm::cos(glm::radians(12.0f)));
         activeShader->setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
 		activeShader->setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
 		activeShader->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
@@ -514,9 +522,9 @@ Shader* renderShaders(WorldObject obj, Shader& lightingShader, Shader& basicLigh
         // light drop off over distance vals
         activeShader->setFloat("light.constant", 1.0f);
 		activeShader->setFloat("light.linear", 0.12f);
-		activeShader->setFloat("light.quadratic", 0.00064f);
+		activeShader->setFloat("light.quadratic", 0.0064f);
 
-		activeShader->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+		//activeShader->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
 		activeShader->setFloat("material.shininess", 32.0f);
 
         return activeShader;

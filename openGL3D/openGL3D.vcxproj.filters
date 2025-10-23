@@ -1403,6 +1403,8 @@
     <None Include="shaders\bgShader.vs" />
     <None Include="shaders\light_casters.fs" />
     <None Include="shaders\light_casters.vs" />
+    <None Include="shaders\flashlight.fs" />
+    <None Include="shaders\flashlight.vs" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="dependencies\lib\glfw3.lib" />
