@@ -568,5 +568,3 @@ unsigned int loadTexture(char const* path) {
     }
     return textureID;
 }
-
-// working on a boring school project rn but we shall be back soon :p
