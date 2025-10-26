@@ -167,6 +167,7 @@
     <ClInclude Include="dependencies\include\assimp\include\assimp\Compiler\poppack1.h" />
     <ClInclude Include="dependencies\include\assimp\include\assimp\Compiler\pstdint.h" />
     <ClInclude Include="dependencies\include\assimp\include\assimp\Compiler\pushpack1.h" />
+    <ClInclude Include="dependencies\include\assimp\include\assimp\config.h" />
     <ClInclude Include="dependencies\include\assimp\include\assimp\CreateAnimMesh.h" />
     <ClInclude Include="dependencies\include\assimp\include\assimp\DefaultIOStream.h" />
     <ClInclude Include="dependencies\include\assimp\include\assimp\DefaultIOSystem.h" />
@@ -207,6 +208,7 @@
     <ClInclude Include="dependencies\include\assimp\include\assimp\qnan.h" />
     <ClInclude Include="dependencies\include\assimp\include\assimp\quaternion.h" />
     <ClInclude Include="dependencies\include\assimp\include\assimp\RemoveComments.h" />
+    <ClInclude Include="dependencies\include\assimp\include\assimp\revision.h" />
     <ClInclude Include="dependencies\include\assimp\include\assimp\scene.h" />
     <ClInclude Include="dependencies\include\assimp\include\assimp\SceneCombiner.h" />
     <ClInclude Include="dependencies\include\assimp\include\assimp\SGSpatialSort.h" />
@@ -536,11 +538,15 @@
     <ClInclude Include="shaders\shader.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="dependencies\include\assimp\include\assimp\.editorconfig" />
     <None Include="dependencies\include\assimp\include\assimp\color4.inl" />
+    <None Include="dependencies\include\assimp\include\assimp\config.h.in" />
     <None Include="dependencies\include\assimp\include\assimp\material.inl" />
     <None Include="dependencies\include\assimp\include\assimp\matrix3x3.inl" />
     <None Include="dependencies\include\assimp\include\assimp\matrix4x4.inl" />
+    <None Include="dependencies\include\assimp\include\assimp\module.modulemap" />
     <None Include="dependencies\include\assimp\include\assimp\quaternion.inl" />
+    <None Include="dependencies\include\assimp\include\assimp\revision.h.in" />
     <None Include="dependencies\include\assimp\include\assimp\SmoothingGroups.inl" />
     <None Include="dependencies\include\assimp\include\assimp\vector2.inl" />
     <None Include="dependencies\include\assimp\include\assimp\vector3.inl" />
@@ -686,6 +692,7 @@
     <None Include="dependencies\include\glm\gtx\vector_angle.inl" />
     <None Include="dependencies\include\glm\gtx\vector_query.inl" />
     <None Include="dependencies\include\glm\gtx\wrap.inl" />
+    <None Include="models\survival-guitar-backpack.zip" />
     <None Include="shaders\basic_lighting.fs" />
     <None Include="shaders\basic_lighting.vs" />
     <None Include="shaders\bgShader.fs" />

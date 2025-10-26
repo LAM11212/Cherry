@@ -9,6 +9,8 @@
 
 #include "shaders/shader.h"
 #include "camera/camera.h"
+#include "mesh.h"
+#include "model.h"
 
 #include <iostream>
 #include <vector>
@@ -169,6 +171,8 @@ int main()
     Shader backgroundShader("shaders/bgShader.vs", "shaders/bgShader.fs");
 	Shader lightCasters("shaders/light_casters.vs", "shaders/light_casters.fs");
     Shader flashlight("shaders/flashlight.vs", "shaders/flashlight.fs");
+
+    Model backpack("C:\\Users\\levia\\Downloads\\survival-guitar-backpack\\source\\Survival_BackPack_2.zip\\Survival_Backpack_2.fbx");
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
@@ -351,6 +355,9 @@ int main()
         flashlight.use();
 		flashlight.setMat4("projection", projection);
 		flashlight.setMat4("view", view);
+
+        //load our model
+		backpack.Draw(lightingShader);
 
         // custom view/projection transformations
         for (auto& obj : worldObjects) {

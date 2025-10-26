@@ -1214,6 +1214,12 @@
     <ClInclude Include="model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="dependencies\include\assimp\include\assimp\config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\include\assimp\include\assimp\revision.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="dependencies\include\glm\detail\func_common.inl">
@@ -1685,6 +1691,11 @@
     <None Include="dependencies\include\assimp\include\assimp\vector3.inl">
       <Filter>Header Files</Filter>
     </None>
+    <None Include="models\survival-guitar-backpack.zip" />
+    <None Include="dependencies\include\assimp\include\assimp\config.h.in" />
+    <None Include="dependencies\include\assimp\include\assimp\.editorconfig" />
+    <None Include="dependencies\include\assimp\include\assimp\module.modulemap" />
+    <None Include="dependencies\include\assimp\include\assimp\revision.h.in" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="dependencies\lib\glfw3.lib" />
