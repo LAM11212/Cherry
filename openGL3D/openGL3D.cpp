@@ -100,20 +100,20 @@ float quadVertices[] = {
 
 std::vector<WorldObject> worldObjects = {
     {{0.0f, -1.0f, 0.0f }, {20.0f, 0.2f, 20.0f}, MaterialType::Flashing  }, // floor
-    {{10.0f, 3.0f, 0.0f }, {0.2f, 8.0f, 10.0f }, MaterialType::Flashing  }, // left wall
-    {{-10.0f, 3.0f, 0.0f}, {0.2f, 8.0f, 20.0f }, MaterialType::Flashing  }, // right wall
-    {{0.0f, 3.0f, -10.0f}, {20.0f, 8.0f, 0.2f }, MaterialType::Flashing  }, // front wall
-    {{ 0.0f, 3.0f, 10.0f}, {20.0f, 8.0f, 0.2f }, MaterialType::Flashing  }, // back wall
-    {{ 0.0f, 7.0f, 0.0f }, {20.0f, 0.2f, 20.0f}, MaterialType::Flashing  }, // ceiling
-    {{20.0f, -1.0f, 0.0f}, {20.0f, 0.2f, 20.0f}, MaterialType::SolidColor}, // floor
-	{{30.0f, 3.0f, 0.0f }, {0.2f, 8.0f, 20.0f }, MaterialType::SolidColor}, // left wall
-    {{20.0f, 3.0f,-10.0f}, {20.0f, 8.0f, 0.2f }, MaterialType::SolidColor}, // front wall
-	{{20.0f, 7.0f, 0.0f }, {20.0f, 0.2f, 20.0f}, MaterialType::SolidColor}, // ceiling
-    {{20.0f, -1.0f,20.0f}, {20.0f, 0.2f, 20.0f}, MaterialType::Textured  }, // floor
-    {{10.0f, 3.0f, 20.0f}, {0.2f, 8.0f, 20.0f }, MaterialType::Textured  }, // right wall
-    {{30.0f, 3.0f, 20.0f }, {0.2f, 8.0f, 20.0f },MaterialType::Textured  }, // left wall
-    {{20.0f, 7.0f, 20.0f }, {20.0f, 0.2f, 20.0f},MaterialType::Textured  }, // ceiling
-    {{20.0f, 3.0f, 20.0f }, {20.0f, 8.0f, 0.2f },MaterialType::Textured  }  // back wall
+ //   {{10.0f, 3.0f, 0.0f }, {0.2f, 8.0f, 10.0f }, MaterialType::Flashing  }, // left wall
+ //   {{-10.0f, 3.0f, 0.0f}, {0.2f, 8.0f, 20.0f }, MaterialType::Flashing  }, // right wall
+ //   {{0.0f, 3.0f, -10.0f}, {20.0f, 8.0f, 0.2f }, MaterialType::Flashing  }, // front wall
+ //   {{ 0.0f, 3.0f, 10.0f}, {20.0f, 8.0f, 0.2f }, MaterialType::Flashing  }, // back wall
+ //   {{ 0.0f, 7.0f, 0.0f }, {20.0f, 0.2f, 20.0f}, MaterialType::Flashing  }, // ceiling
+ //   {{20.0f, -1.0f, 0.0f}, {20.0f, 0.2f, 20.0f}, MaterialType::SolidColor}, // floor
+	//{{30.0f, 3.0f, 0.0f }, {0.2f, 8.0f, 20.0f }, MaterialType::SolidColor}, // left wall
+ //   {{20.0f, 3.0f,-10.0f}, {20.0f, 8.0f, 0.2f }, MaterialType::SolidColor}, // front wall
+	//{{20.0f, 7.0f, 0.0f }, {20.0f, 0.2f, 20.0f}, MaterialType::SolidColor}, // ceiling
+ //   {{20.0f, -1.0f,20.0f}, {20.0f, 0.2f, 20.0f}, MaterialType::Textured  }, // floor
+ //   {{10.0f, 3.0f, 20.0f}, {0.2f, 8.0f, 20.0f }, MaterialType::Textured  }, // right wall
+ //   {{30.0f, 3.0f, 20.0f }, {0.2f, 8.0f, 20.0f },MaterialType::Textured  }, // left wall
+ //   {{20.0f, 7.0f, 20.0f }, {20.0f, 0.2f, 20.0f},MaterialType::Textured  }, // ceiling
+ //   {{20.0f, 3.0f, 20.0f }, {20.0f, 8.0f, 0.2f },MaterialType::Textured  }  // back wall
 };
 
 // shaders
@@ -172,7 +172,16 @@ int main()
 	Shader lightCasters("shaders/light_casters.vs", "shaders/light_casters.fs");
     Shader flashlight("shaders/flashlight.vs", "shaders/flashlight.fs");
 
-    Model backpack("C:\\Users\\levia\\Downloads\\survival-guitar-backpack\\source\\Survival_BackPack_2.zip\\Survival_Backpack_2.fbx");
+    Model Gun("models/futuristic-sci-fi-glock/source/ASM - PBR Metallic Roughness/ASM - PBR Metallic Roughness.fbx");
+
+    if (Gun.meshes.empty())
+    {
+        std::cout << "Model failed to load or has no meshes\n";
+    }
+    else
+    {
+        std::cout << "Loaded model with: " << Gun.meshes.size() << " meshes\n";
+    }
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
@@ -356,8 +365,16 @@ int main()
 		flashlight.setMat4("projection", projection);
 		flashlight.setMat4("view", view);
 
-        //load our model
-		backpack.Draw(lightingShader);
+        //load our gun model
+        glm::mat4 model = glm::mat4(1.0f);
+
+        // position the gun in front of the camera
+        model = glm::translate(model, camera.Position + camera.Front * 1.0f);
+        // scale down
+        model = glm::scale(model, glm::vec3(0.01f));
+        lightingShader.use();
+		lightingShader.setMat4("model", model);
+		Gun.Draw(lightingShader);
 
         // custom view/projection transformations
         for (auto& obj : worldObjects) {
@@ -383,8 +400,8 @@ int main()
         }
 
         // world transformation
-        glm::mat4 model = glm::mat4(1.0f);
-        lightingShader.setMat4("model", model);
+        //glm::mat4 model = glm::mat4(1.0f);
+        //lightingShader.setMat4("model", model);
 
 
         // also draw the lamp object

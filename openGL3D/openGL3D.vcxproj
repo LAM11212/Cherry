@@ -692,7 +692,7 @@
     <None Include="dependencies\include\glm\gtx\vector_angle.inl" />
     <None Include="dependencies\include\glm\gtx\vector_query.inl" />
     <None Include="dependencies\include\glm\gtx\wrap.inl" />
-    <None Include="models\survival-guitar-backpack.zip" />
+    <None Include="models\futuristic-sci-fi-glock\source\ASM - PBR Metallic Roughness\ASM - PBR Metallic Roughness.fbx" />
     <None Include="shaders\basic_lighting.fs" />
     <None Include="shaders\basic_lighting.vs" />
     <None Include="shaders\bgShader.fs" />

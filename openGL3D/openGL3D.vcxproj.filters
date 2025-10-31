@@ -1691,11 +1691,11 @@
     <None Include="dependencies\include\assimp\include\assimp\vector3.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="models\survival-guitar-backpack.zip" />
     <None Include="dependencies\include\assimp\include\assimp\config.h.in" />
     <None Include="dependencies\include\assimp\include\assimp\.editorconfig" />
     <None Include="dependencies\include\assimp\include\assimp\module.modulemap" />
     <None Include="dependencies\include\assimp\include\assimp\revision.h.in" />
+    <None Include="models\futuristic-sci-fi-glock\source\ASM - PBR Metallic Roughness\ASM - PBR Metallic Roughness.fbx" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="dependencies\lib\glfw3.lib" />
