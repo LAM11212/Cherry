@@ -171,6 +171,8 @@ int main()
     Shader backgroundShader("shaders/bgShader.vs", "shaders/bgShader.fs");
 	Shader lightCasters("shaders/light_casters.vs", "shaders/light_casters.fs");
     Shader flashlight("shaders/flashlight.vs", "shaders/flashlight.fs");
+	Shader gunShader("shaders/gun.vs", "shaders/gun.fs");
+    Shader pyramidShader("shaders/pyramid.vs", "shaders/pyramid.fs");
 
     Model Gun("models/futuristic-sci-fi-glock/source/ASM - PBR Metallic Roughness/ASM - PBR Metallic Roughness.fbx");
 
@@ -274,6 +276,60 @@ int main()
 	glEnableVertexAttribArray(1);
 	glBindVertexArray(0);
 
+    float pyramid[] = {
+        // Positions           // Normals            // Colors
+
+        // Base (two triangles, facing down)
+        -0.5f, -0.5f, -0.5f,   0.0f, -1.0f, 0.0f,   1.0f, 0.0f, 0.0f,
+         0.5f, -0.5f, -0.5f,   0.0f, -1.0f, 0.0f,   0.0f, 1.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,   0.0f, -1.0f, 0.0f,   0.0f, 0.0f, 1.0f,
+
+        -0.5f, -0.5f, -0.5f,   0.0f, -1.0f, 0.0f,   1.0f, 0.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,   0.0f, -1.0f, 0.0f,   0.0f, 0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,   0.0f, -1.0f, 0.0f,   1.0f, 1.0f, 0.0f,
+
+        // Front face
+        -0.5f, -0.5f,  0.5f,   0.0f,  0.5f,  1.0f,  1.0f, 0.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,   0.0f,  0.5f,  1.0f,  0.0f, 1.0f, 0.0f,
+         0.0f,  0.5f,  0.0f,   0.0f,  0.5f,  1.0f,  0.0f, 0.0f, 1.0f,
+
+        // Right face
+         0.5f, -0.5f,  0.5f,   1.0f,  0.5f,  0.0f,  1.0f, 0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,   1.0f,  0.5f,  0.0f,  0.0f, 1.0f, 1.0f,
+         0.0f,  0.5f,  0.0f,   1.0f,  0.5f,  0.0f,  1.0f, 1.0f, 1.0f,
+
+        // Back face
+         0.5f, -0.5f, -0.5f,   0.0f,  0.5f, -1.0f,  1.0f, 0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,   0.0f,  0.5f, -1.0f,  0.0f, 1.0f, 0.0f,
+         0.0f,  0.5f,  0.0f,   0.0f,  0.5f, -1.0f,  0.0f, 0.0f, 1.0f,
+
+        // Left face
+        -0.5f, -0.5f, -0.5f,  -1.0f,  0.5f,  0.0f,  1.0f, 0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  -1.0f,  0.5f,  0.0f,  0.0f, 1.0f, 1.0f,
+         0.0f,  0.5f,  0.0f,  -1.0f,  0.5f,  0.0f,  1.0f, 1.0f, 0.0f
+    };
+
+    unsigned int pyramidVBO, pyramidVAO;
+    glGenVertexArrays(1, &pyramidVAO);
+	glGenBuffers(1, &pyramidVBO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, pyramidVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(pyramid), pyramid, GL_STATIC_DRAW);
+
+    glBindVertexArray(pyramidVAO);
+
+    //position attrib
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    // normal attrib
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    // color attrib
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
+
 
     unsigned int diffuseMap = loadTexture("textures/backroomswall.jpeg");
     std::cout << "Loaded texture ID: " << diffuseMap << std::endl;
@@ -290,6 +346,16 @@ int main()
     std::cout << "Texture ID: " << worldObjects.back().textureID << std::endl;
 
     unsigned int bgTexture = loadTexture("textures/liminalBG.jpg");
+
+    // GUN TEXTURE
+	unsigned int gunTexture = loadTexture("models/futuristic-sci-fi-glock/textures/Stylized glock_Empty_BaseColor.png");
+    gunShader.use();
+    gunShader.setInt("texture_diffuse1", 0);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, gunTexture);
+
+    //Gun.Draw(gunShader);
 
 	std::cout << "BG Texture ID: " << bgTexture << std::endl;
     // render loop
@@ -365,6 +431,19 @@ int main()
 		flashlight.setMat4("projection", projection);
 		flashlight.setMat4("view", view);
 
+		gunShader.use();
+		gunShader.setMat4("projection", projection);
+		gunShader.setMat4("view", view);
+
+        pyramidShader.use();
+		pyramidShader.setMat4("projection", projection);
+		pyramidShader.setMat4("view", view);
+        glm::mat4 pyramidModel = glm::mat4(1.0f);
+		pyramidShader.setMat4("model", pyramidModel);
+
+		glBindVertexArray(pyramidVAO);
+        glDrawArrays(GL_TRIANGLES, 0, 18);
+
         //load our gun model and move to camera position
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(camera.Position));
@@ -386,9 +465,9 @@ int main()
         // scale down
         model = glm::scale(model, glm::vec3(0.0009f));
 
-        lightingShader.use();
-		lightingShader.setMat4("model", model);
-		Gun.Draw(lightingShader);
+        gunShader.use();
+		gunShader.setMat4("model", model);
+		Gun.Draw(gunShader);
 
         // custom view/projection transformations
         for (auto& obj : worldObjects) {

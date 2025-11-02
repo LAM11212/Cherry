@@ -1,0 +1,56 @@
+﻿// CHEAT SHEET:
+// coordinate spaces
+//| Space                    | Description                                   | Transform                   |
+//| ------------------------ | --------------------------------------------- | --------------------------- |
+//| **Object (Model) Space** | Local coordinates of the model.               | None                        |
+//| **World Space**          | Model positioned/rotated/scaled in the world. | `model` matrix              |
+//| **View (Camera) Space**  | Coordinates relative to camera.               | `view` matrix               |
+//| **Clip Space**           | Normalized space for rasterization.           | `projection * view * model` |
+//| **Screen Space**         | Final 2D coordinates on your screen.          | Viewport transform          |
+
+//Key: gl_Position = projection * view * model * vec4(position, 1.0);
+
+// vertex shader roles
+//Vertex Shader Roles
+
+//Take vertex positions, normals, colors, texture coords as inputs.
+
+//Transform positions to world + clip space.
+
+//Transform normals correctly:
+
+//fragNormal = mat3(transpose(inverse(model))) * aNormal;
+
+//Ensures normals rotate & scale correctly with the model.
+
+//Pass variables to fragment shader using out.
+
+//Fragment Shader Roles
+
+//Receive interpolated data (fragPos, fragNormal, fragColor) from vertex shader.
+
+//Compute lighting per pixel:
+
+//Ambient → constant low-light: ambient = 0.1 * color
+
+//Diffuse → light hitting surface directly:
+
+//diff = max(dot(norm, lightDir), 0.0);
+//diffuse = diff * color;
+
+//Specular → shiny highlights:
+
+//reflectDir = reflect(-lightDir, norm);
+//spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
+//specular = vec3(0.5) * spec;
+
+//Combine: finalColor = ambient + diffuse + specular
+
+//Lighting math intuition
+//| Term                             | Vector Math                                          | Concept                                            |
+//| -------------------------------- | ---------------------------------------------------- | -------------------------------------------------- |
+//| **Normal (`norm`)**              | Perpendicular vector at surface                      | Tells which way the surface is facing              |
+//| **Light Direction (`lightDir`)** | `normalize(lightPos - fragPos)`                      | Direction from surface to light                    |
+//| **View Direction (`viewDir`)**   | `normalize(viewPos - fragPos)`                       | Direction from surface to camera                   |
+//| **Diffuse**                      | `max(dot(norm, lightDir), 0.0)`                      | How much light hits directly                       |
+//| **Specular**                     | `pow(max(dot(viewDir, reflectDir), 0.0), shininess)` | Shiny highlights where reflection aligns with view |

@@ -701,6 +701,8 @@
     <None Include="shaders\colors.vs" />
     <None Include="shaders\flashlight.fs" />
     <None Include="shaders\flashlight.vs" />
+    <None Include="shaders\gun.fs" />
+    <None Include="shaders\gun.vs" />
     <None Include="shaders\light_casters.fs" />
     <None Include="shaders\light_casters.vs" />
     <None Include="shaders\light_cube.fs" />
@@ -709,6 +711,8 @@
     <None Include="shaders\materials.vs" />
     <None Include="shaders\lighting_map.fs" />
     <None Include="shaders\lighting_map.vs" />
+    <None Include="shaders\pyramid.fs" />
+    <None Include="shaders\pyramid.vs" />
     <None Include="shaders\temp.fs" />
     <None Include="x64\Debug\openGL3D.tlog\CL.command.1.tlog" />
     <None Include="x64\Debug\openGL3D.tlog\CL.read.1.tlog" />
@@ -727,6 +731,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="dependencies\include\glm\CMakeLists.txt" />
+    <Text Include="HELP\Vertex&amp;fragmentShaders.txt" />
     <Text Include="x64\Debug\openGL3D.Build.CppClean.log" />
     <Text Include="x64\Debug\openGL3D.log" />
     <Text Include="x64\Debug\openGL3D.vcxproj.FileListAbsolute.txt" />
