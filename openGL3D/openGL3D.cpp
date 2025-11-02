@@ -365,13 +365,27 @@ int main()
 		flashlight.setMat4("projection", projection);
 		flashlight.setMat4("view", view);
 
-        //load our gun model
+        //load our gun model and move to camera position
         glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(camera.Position));
 
-        // position the gun in front of the camera
-        model = glm::translate(model, camera.Position + camera.Front * 1.0f);
+        // apply camera rotation
+        glm::mat4 rotation = glm::mat4(1.0f);
+		rotation[0] = glm::vec4(camera.Right, 0.0f);
+		rotation[1] = glm::vec4(camera.Up, 0.0f);
+		rotation[2] = glm::vec4(-camera.Front, 0.0f);
+        model *= rotation;
+
+        // offset
+        glm::vec3 offset = glm::vec3(0.3f, -0.3f, -0.7f);
+        model = glm::translate(model, offset);
+
+        //fix rotation
+		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+
         // scale down
-        model = glm::scale(model, glm::vec3(0.01f));
+        model = glm::scale(model, glm::vec3(0.0009f));
+
         lightingShader.use();
 		lightingShader.setMat4("model", model);
 		Gun.Draw(lightingShader);
