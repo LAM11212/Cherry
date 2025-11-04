@@ -36,7 +36,7 @@ float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
 // lighting
-glm::vec3 lightPos(15.2f, 5.0f, 15.0f);
+glm::vec3 lightPos(-0.5f, -10.0f, -0.2f);
 
 //player settings
 glm::vec3 playerSize = glm::vec3(0.6f, 0.0f, 0.6f);
@@ -277,36 +277,36 @@ int main()
 	glBindVertexArray(0);
 
     float pyramid[] = {
-        // Positions           // Normals            // Colors
+        // Positions           // Normals            // texCoords
 
         // Base (two triangles, facing down)
-        -0.5f, -0.5f, -0.5f,   0.0f, -1.0f, 0.0f,   1.0f, 0.0f, 0.0f,
-         0.5f, -0.5f, -0.5f,   0.0f, -1.0f, 0.0f,   0.0f, 1.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,   0.0f, -1.0f, 0.0f,   0.0f, 0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,   0.0f, -1.0f, 0.0f,   0.0f, 0.0f, 
+         0.5f, -0.5f, -0.5f,   0.0f, -1.0f, 0.0f,   1.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,   0.0f, -1.0f, 0.0f,   1.0f, 1.0f,
 
-        -0.5f, -0.5f, -0.5f,   0.0f, -1.0f, 0.0f,   1.0f, 0.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,   0.0f, -1.0f, 0.0f,   0.0f, 0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,   0.0f, -1.0f, 0.0f,   1.0f, 1.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,   0.0f, -1.0f, 0.0f,   0.0f, 0.0f, 
+         0.5f, -0.5f,  0.5f,   0.0f, -1.0f, 0.0f,   1.0f, 1.0f, 
+        -0.5f, -0.5f,  0.5f,   0.0f, -1.0f, 0.0f,   0.0f, 1.0f,
 
         // Front face
-        -0.5f, -0.5f,  0.5f,   0.0f,  0.5f,  1.0f,  1.0f, 0.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,   0.0f,  0.5f,  1.0f,  0.0f, 1.0f, 0.0f,
-         0.0f,  0.5f,  0.0f,   0.0f,  0.5f,  1.0f,  0.0f, 0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,   0.0f,  0.5f,  1.0f,  0.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,   0.0f,  0.5f,  1.0f,  1.0f, 0.0f,
+         0.0f,  0.5f,  0.0f,   0.0f,  0.5f,  1.0f,  0.5f, 1.0f,
 
-        // Right face
-         0.5f, -0.5f,  0.5f,   1.0f,  0.5f,  0.0f,  1.0f, 0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,   1.0f,  0.5f,  0.0f,  0.0f, 1.0f, 1.0f,
-         0.0f,  0.5f,  0.0f,   1.0f,  0.5f,  0.0f,  1.0f, 1.0f, 1.0f,
+         // Right face
+          0.5f, -0.5f,  0.5f,   1.0f,  0.5f,  0.0f,  0.0f, 0.0f, 
+          0.5f, -0.5f, -0.5f,   1.0f,  0.5f,  0.0f,  1.0f, 0.0f,
+          0.0f,  0.5f,  0.0f,   1.0f,  0.5f,  0.0f,  0.5f, 1.0f,
 
-        // Back face
-         0.5f, -0.5f, -0.5f,   0.0f,  0.5f, -1.0f,  1.0f, 0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,   0.0f,  0.5f, -1.0f,  0.0f, 1.0f, 0.0f,
-         0.0f,  0.5f,  0.0f,   0.0f,  0.5f, -1.0f,  0.0f, 0.0f, 1.0f,
+          // Back face
+           0.5f, -0.5f, -0.5f,   0.0f,  0.5f, -1.0f,  0.0f, 0.0f, 
+          -0.5f, -0.5f, -0.5f,   0.0f,  0.5f, -1.0f,  1.0f, 0.0f,
+           0.0f,  0.5f,  0.0f,   0.0f,  0.5f, -1.0f,  0.5f, 1.0f,
 
-        // Left face
-        -0.5f, -0.5f, -0.5f,  -1.0f,  0.5f,  0.0f,  1.0f, 0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  -1.0f,  0.5f,  0.0f,  0.0f, 1.0f, 1.0f,
-         0.0f,  0.5f,  0.0f,  -1.0f,  0.5f,  0.0f,  1.0f, 1.0f, 0.0f
+           // Left face
+           -0.5f, -0.5f, -0.5f,  -1.0f,  0.5f,  0.0f,  0.0f, 0.0f,
+           -0.5f, -0.5f,  0.5f,  -1.0f,  0.5f,  0.0f,  1.0f, 0.0f,
+            0.0f,  0.5f,  0.0f,  -1.0f,  0.5f,  0.0f,  0.5f, 1.0f,
     };
 
     unsigned int pyramidVBO, pyramidVAO;
@@ -319,16 +319,18 @@ int main()
     glBindVertexArray(pyramidVAO);
 
     //position attrib
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
     // normal attrib
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
-    // color attrib
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)(6 * sizeof(float)));
+    // texture attrib
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 	glEnableVertexAttribArray(2);
+
+    unsigned int pyramidTexture = loadTexture("textures/obama.jpg");
 
 
     unsigned int diffuseMap = loadTexture("textures/backroomswall.jpeg");
@@ -403,6 +405,8 @@ int main()
         glEnable(GL_DEPTH_TEST);
 
         // be sure to activate shader when setting uniforms/drawing objects
+
+		std::cout << "camera x: " << camera.Position.x << " y: " << camera.Position.y << " z: " << camera.Position.z << std::endl;
 	
 
         // view/projection transformations
@@ -438,13 +442,20 @@ int main()
         pyramidShader.use();
 		pyramidShader.setMat4("projection", projection);
 		pyramidShader.setMat4("view", view);
+        pyramidShader.setInt("texture1", 0);
         glm::mat4 pyramidModel = glm::mat4(1.0f);
+        //pyramidModel = glm::translate(pyramidModel, glm::vec3(-3.0f, 0.0f, -3.0f));
+        pyramidModel = glm::rotate(pyramidModel, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
+        pyramidModel = glm::scale(pyramidModel, glm::vec3(2.0f));
 		pyramidShader.setMat4("model", pyramidModel);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, pyramidTexture);
 
 		glBindVertexArray(pyramidVAO);
         glDrawArrays(GL_TRIANGLES, 0, 18);
 
         //load our gun model and move to camera position
+        gunShader.use();
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(camera.Position));
 
@@ -493,18 +504,18 @@ int main()
         }
 
         // world transformation
-        //glm::mat4 model = glm::mat4(1.0f);
-        //lightingShader.setMat4("model", model);
+        //glm::mat4 lightmodel = glm::mat4(1.0f);
+        //lightingShader.setMat4("model", lightmodel);
 
 
-        // also draw the lamp object
+        //// also draw the lamp object
         //lightCubeShader.use();
         //lightCubeShader.setMat4("projection", projection);
         //lightCubeShader.setMat4("view", view);
         //model = glm::mat4(1.0f);
-        //model = glm::translate(model, lightPos);
-        //model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
-        //lightCubeShader.setMat4("model", model);
+        //model = glm::translate(lightmodel, lightPos);
+        //model = glm::scale(lightmodel, glm::vec3(0.2f)); // a smaller cube
+        //lightCubeShader.setMat4("model", lightmodel);
 
         //glBindVertexArray(lightCubeVAO);
         //glDrawArrays(GL_TRIANGLES, 0, 36);

@@ -1725,5 +1725,8 @@
     <Image Include="textures\liminalBG.jpg">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="textures\obama.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
