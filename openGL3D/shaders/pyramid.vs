@@ -17,5 +17,5 @@ void main()
 	fragNormals = mat3(transpose(inverse(model))) * aNormal; // this line ensures that the normals are set up correctly for lighting
 	texCoords = aTexCoords;
 
-	gl_Position = projection * view * model * vec4(aPos, 1.0);
+	gl_Position = projection * view * model * vec4(fragPos, 1.0);
 }

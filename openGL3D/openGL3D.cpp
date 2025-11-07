@@ -404,10 +404,7 @@ int main()
         //glBindVertexArray(0);
         glEnable(GL_DEPTH_TEST);
 
-        // be sure to activate shader when setting uniforms/drawing objects
-
-		std::cout << "camera x: " << camera.Position.x << " y: " << camera.Position.y << " z: " << camera.Position.z << std::endl;
-	
+        // be sure to activate shader when setting uniforms/drawing objects	
 
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -448,6 +445,12 @@ int main()
         pyramidModel = glm::rotate(pyramidModel, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
         pyramidModel = glm::scale(pyramidModel, glm::vec3(2.0f));
 		pyramidShader.setMat4("model", pyramidModel);
+        pyramidShader.setVec3("light.position", lightPos);
+		pyramidShader.setVec3("light.ambient", 0.5f, 0.2f, 0.3f);
+        pyramidShader.setVec3("light.diffuse", 0.5f, 0.5f, 1.0f);
+		pyramidShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+        pyramidShader.setFloat("material.shininess", 32.0f);
+		pyramidShader.setMat4("material.diffuse", glm::mat4(1.0f));
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, pyramidTexture);
 
