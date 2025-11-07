@@ -507,7 +507,6 @@ int main()
         //glm::mat4 lightmodel = glm::mat4(1.0f);
         //lightingShader.setMat4("model", lightmodel);
 
-
         //// also draw the lamp object
         //lightCubeShader.use();
         //lightCubeShader.setMat4("projection", projection);
