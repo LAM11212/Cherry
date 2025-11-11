@@ -11,6 +11,10 @@
 #include "camera/camera.h"
 #include "mesh.h"
 #include "model.h"
+#include "WorldObject.h"
+#include "MaterialType.h"
+#include "worldFactory.h"
+
 
 #include <iostream>
 #include <vector>
@@ -41,18 +45,6 @@ glm::vec3 lightPos(-0.5f, -10.0f, -0.2f);
 //player settings
 glm::vec3 playerSize = glm::vec3(0.6f, 0.0f, 0.6f);
 
-enum class MaterialType {
-    SolidColor,
-    Flashing,
-    Textured
-};
-//world object vector
-struct WorldObject {
-    glm::vec3 position;
-    glm::vec3 scale;
-    MaterialType material;
-    unsigned int textureID = 0;
-};
 
 // collision object
 struct AABB {
@@ -98,27 +90,11 @@ float quadVertices[] = {
      1.0f,  1.0f,   1.0f, 1.0f  // top-right
 };
 
-std::vector<WorldObject> worldObjects = {
-    {{0.0f, -1.0f, 0.0f }, {20.0f, 0.2f, 20.0f}, MaterialType::Flashing  }, // floor
- //   {{10.0f, 3.0f, 0.0f }, {0.2f, 8.0f, 10.0f }, MaterialType::Flashing  }, // left wall
- //   {{-10.0f, 3.0f, 0.0f}, {0.2f, 8.0f, 20.0f }, MaterialType::Flashing  }, // right wall
- //   {{0.0f, 3.0f, -10.0f}, {20.0f, 8.0f, 0.2f }, MaterialType::Flashing  }, // front wall
- //   {{ 0.0f, 3.0f, 10.0f}, {20.0f, 8.0f, 0.2f }, MaterialType::Flashing  }, // back wall
- //   {{ 0.0f, 7.0f, 0.0f }, {20.0f, 0.2f, 20.0f}, MaterialType::Flashing  }, // ceiling
- //   {{20.0f, -1.0f, 0.0f}, {20.0f, 0.2f, 20.0f}, MaterialType::SolidColor}, // floor
-	//{{30.0f, 3.0f, 0.0f }, {0.2f, 8.0f, 20.0f }, MaterialType::SolidColor}, // left wall
- //   {{20.0f, 3.0f,-10.0f}, {20.0f, 8.0f, 0.2f }, MaterialType::SolidColor}, // front wall
-	//{{20.0f, 7.0f, 0.0f }, {20.0f, 0.2f, 20.0f}, MaterialType::SolidColor}, // ceiling
- //   {{20.0f, -1.0f,20.0f}, {20.0f, 0.2f, 20.0f}, MaterialType::Textured  }, // floor
- //   {{10.0f, 3.0f, 20.0f}, {0.2f, 8.0f, 20.0f }, MaterialType::Textured  }, // right wall
- //   {{30.0f, 3.0f, 20.0f }, {0.2f, 8.0f, 20.0f },MaterialType::Textured  }, // left wall
- //   {{20.0f, 7.0f, 20.0f }, {20.0f, 0.2f, 20.0f},MaterialType::Textured  }, // ceiling
- //   {{20.0f, 3.0f, 20.0f }, {20.0f, 8.0f, 0.2f },MaterialType::Textured  }  // back wall
-};
+std::vector<WorldObject> worldObjects = WorldFactory::loadWorld("world.json");
 
 // shaders
 // -------
-Shader* renderShaders(WorldObject obj, Shader& lightingShader, Shader& basicLightingShader, Shader& lightingMap, Shader& light_casters, Shader& flashlight);
+//Shader* renderShaders(WorldObject obj, Shader& lightingShader, Shader& basicLightingShader, Shader& lightingMap, Shader& light_casters, Shader& flashlight);
 
 int main()
 {
@@ -164,13 +140,8 @@ int main()
 
     // shaders
     // -------
-    Shader lightingShader("shaders/materials.vs", "shaders/materials.fs");
-    Shader basicLightingShader("shaders/basic_lighting.vs", "shaders/basic_lighting.fs");
-    Shader lightCubeShader("shaders/light_cube.vs", "shaders/light_cube.fs");
-    Shader lightingMap("shaders/lighting_map.vs", "shaders/lighting_map.fs");
-    Shader backgroundShader("shaders/bgShader.vs", "shaders/bgShader.fs");
-	Shader lightCasters("shaders/light_casters.vs", "shaders/light_casters.fs");
-    Shader flashlight("shaders/flashlight.vs", "shaders/flashlight.fs");
+    Shader horrorShader("shaders/universal_lit.vs", "shaders/universal_lit.fs");
+	Shader backgroundShader("shaders/bgShader.vs", "shaders/bgShader.fs");
 	Shader gunShader("shaders/gun.vs", "shaders/gun.fs");
     Shader pyramidShader("shaders/pyramid.vs", "shaders/pyramid.fs");
 
@@ -342,8 +313,8 @@ int main()
     if (diffuseMap == 0)
         std::cout << "texture failed to load";
 
-    lightingMap.use();
-	lightingMap.setInt("material.diffuse", 0);
+    //lightingMap.use();
+	//lightingMap.setInt("material.diffuse", 0);
 
     std::cout << "Texture ID: " << worldObjects.back().textureID << std::endl;
 
@@ -409,28 +380,7 @@ int main()
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
-        lightingShader.setMat4("projection", projection);
-        lightingShader.setMat4("view", view);
-
-        lightingShader.use();
-        lightingShader.setMat4("projection", projection);
-        lightingShader.setMat4("view", view);
-
-        basicLightingShader.use();
-        basicLightingShader.setMat4("projection", projection);
-        basicLightingShader.setMat4("view", view);
-
-        lightingMap.use();
-		lightingMap.setMat4("projection", projection);
-		lightingMap.setMat4("view", view);
-
-        lightCasters.use();
-		lightCasters.setMat4("projection", projection);
-		lightCasters.setMat4("view", view);
-
-        flashlight.use();
-		flashlight.setMat4("projection", projection);
-		flashlight.setMat4("view", view);
+        
 
 		gunShader.use();
 		gunShader.setMat4("projection", projection);
@@ -485,25 +435,7 @@ int main()
 
         // custom view/projection transformations
         for (auto& obj : worldObjects) {
-			Shader* activeShader = renderShaders(obj, lightingShader, basicLightingShader, lightingMap, lightCasters, flashlight);
-            if (!activeShader) continue;
-
-            if (activeShader) {
-                glm::mat4 model = glm::mat4(1.0f);
-                model = glm::translate(model, obj.position);
-                model = glm::scale(model, obj.scale);
-                activeShader->setMat4("model", model);
-
-                if (obj.material == MaterialType::Textured && obj.textureID != 0) {
-                    activeShader->use();
-                    glActiveTexture(GL_TEXTURE0);
-                    glBindTexture(GL_TEXTURE_2D, obj.textureID);
-                    //activeShader->setInt("material.diffuse", 0);
-                }
-
-                glBindVertexArray(cubeVAO);
-                glDrawArrays(GL_TRIANGLES, 0, 36);
-            }
+			obj.render(cubeVAO, horrorShader, true, true);
         }
 
         // world transformation
@@ -601,64 +533,65 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
     camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }
 
-Shader* renderShaders(WorldObject obj, Shader& lightingShader, Shader& basicLightingShader, Shader& lightingMap, Shader& light_casters, Shader& flashlight) {
-    Shader* activeShader = nullptr;
-    if (obj.material == MaterialType::Flashing) {
-        activeShader = &lightingShader;
-        activeShader->use();
-        activeShader->setVec3("light.position", lightPos);
-        activeShader->setVec3("viewPos", camera.Position);
-
-        glm::vec3 lightColor;
-        lightColor.x = sin(glfwGetTime() * 2.0f);
-        lightColor.y = sin(glfwGetTime() * 0.7f);
-        lightColor.z = sin(glfwGetTime() * 1.3f);
-
-        glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f);
-        glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f);
-
-        activeShader->setVec3("light.ambient", ambientColor);
-        activeShader->setVec3("light.diffuse", diffuseColor);
-        activeShader->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-
-        activeShader->setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
-        activeShader->setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
-        activeShader->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
-        activeShader->setFloat("material.shininess", 32.0f);
-        return activeShader;
-	}
-    else if (obj.material == MaterialType::SolidColor) {
-        activeShader = &basicLightingShader;
-        activeShader->use();
-        activeShader->setVec3("lightPos", glm::vec3(lightPos.x, lightPos.y, lightPos.z - 10));
-        activeShader->setVec3("lightColor", 0.5f, 0.5f, 0.5f);
-        activeShader->setVec3("objectColor", 1.0f, 0.5f, 0.31f);
-        activeShader->setVec3("viewPos", camera.Position);
-        return activeShader;
-    }
-    else if (obj.material == MaterialType::Textured) {
-        activeShader = &flashlight;
-
-		activeShader->use();
-        activeShader->setVec3("light.position", camera.Position);
-		activeShader->setVec3("light.direction", camera.Front);
-		activeShader->setFloat("light.cutOff", glm::cos(glm::radians(8.5f)));
-		activeShader->setFloat("light.outerCutOff", glm::cos(glm::radians(12.0f)));
-        activeShader->setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
-		activeShader->setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
-		activeShader->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-
-        // light drop off over distance vals
-        activeShader->setFloat("light.constant", 1.0f);
-		activeShader->setFloat("light.linear", 0.12f);
-		activeShader->setFloat("light.quadratic", 0.0064f);
-
-		//activeShader->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
-		activeShader->setFloat("material.shininess", 32.0f);
-
-        return activeShader;
-    }
-}
+// this method is more or less useless as of where i am in the project; however i will keep this here just in case.
+//Shader* renderShaders(WorldObject obj, Shader& lightingShader, Shader& basicLightingShader, Shader& lightingMap, Shader& light_casters, Shader& flashlight) {
+//    Shader* activeShader = nullptr;
+//    if (obj.material == MaterialType::Flashing) {
+//        activeShader = &lightingShader;
+//        activeShader->use();
+//        activeShader->setVec3("light.position", lightPos);
+//        activeShader->setVec3("viewPos", camera.Position);
+//
+//        glm::vec3 lightColor;
+//        lightColor.x = sin(glfwGetTime() * 2.0f);
+//        lightColor.y = sin(glfwGetTime() * 0.7f);
+//        lightColor.z = sin(glfwGetTime() * 1.3f);
+//
+//        glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f);
+//        glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f);
+//
+//        activeShader->setVec3("light.ambient", ambientColor);
+//        activeShader->setVec3("light.diffuse", diffuseColor);
+//        activeShader->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+//
+//        activeShader->setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
+//        activeShader->setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+//        activeShader->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+//        activeShader->setFloat("material.shininess", 32.0f);
+//        return activeShader;
+//	}
+//    else if (obj.material == MaterialType::SolidColor) {
+//        activeShader = &basicLightingShader;
+//        activeShader->use();
+//        activeShader->setVec3("lightPos", glm::vec3(lightPos.x, lightPos.y, lightPos.z - 10));
+//        activeShader->setVec3("lightColor", 0.5f, 0.5f, 0.5f);
+//        activeShader->setVec3("objectColor", 1.0f, 0.5f, 0.31f);
+//        activeShader->setVec3("viewPos", camera.Position);
+//        return activeShader;
+//    }
+//    else if (obj.material == MaterialType::Textured) {
+//        activeShader = &flashlight;
+//
+//		activeShader->use();
+//        activeShader->setVec3("light.position", camera.Position);
+//		activeShader->setVec3("light.direction", camera.Front);
+//		activeShader->setFloat("light.cutOff", glm::cos(glm::radians(8.5f)));
+//		activeShader->setFloat("light.outerCutOff", glm::cos(glm::radians(12.0f)));
+//        activeShader->setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
+//		activeShader->setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
+//		activeShader->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+//
+//        // light drop off over distance vals
+//        activeShader->setFloat("light.constant", 1.0f);
+//		activeShader->setFloat("light.linear", 0.12f);
+//		activeShader->setFloat("light.quadratic", 0.0064f);
+//
+//		//activeShader->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+//		activeShader->setFloat("material.shininess", 32.0f);
+//
+//        return activeShader;
+//    }
+//}
 
 unsigned int loadTexture(char const* path) {
     unsigned int textureID;

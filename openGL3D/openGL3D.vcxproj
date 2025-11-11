@@ -145,6 +145,8 @@
     <ClCompile Include="mesh.h" />
     <ClCompile Include="openGL3D.cpp" />
     <ClCompile Include="stb_image.cpp" />
+    <ClCompile Include="WorldFactory.cpp" />
+    <ClCompile Include="WorldObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera\camera.h" />
@@ -524,6 +526,52 @@
     <ClInclude Include="dependencies\include\glm\vec4.hpp" />
     <ClInclude Include="dependencies\include\glm\vector_relational.hpp" />
     <ClInclude Include="dependencies\include\KHR\khrplatform.h" />
+    <ClInclude Include="dependencies\include\nlohmann\adl_serializer.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\byte_container_with_subtype.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\abi_macros.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\conversions\from_json.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\conversions\to_chars.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\conversions\to_json.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\exceptions.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\hash.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\input\binary_reader.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\input\input_adapters.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\input\json_sax.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\input\lexer.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\input\parser.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\input\position_t.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\iterators\internal_iterator.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\iterators\iteration_proxy.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\iterators\iterator_traits.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\iterators\iter_impl.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\iterators\json_reverse_iterator.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\iterators\primitive_iterator.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\json_custom_base_class.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\json_pointer.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\json_ref.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\macro_scope.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\macro_unscope.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\meta\call_std\begin.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\meta\call_std\end.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\meta\cpp_future.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\meta\detected.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\meta\identity_tag.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\meta\is_sax.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\meta\std_fs.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\meta\type_traits.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\meta\void_t.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\output\binary_writer.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\output\output_adapters.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\output\serializer.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\string_concat.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\string_escape.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\string_utils.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\detail\value_t.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\json.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\json_fwd.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\ordered_map.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\thirdparty\hedley\hedley.hpp" />
+    <ClInclude Include="dependencies\include\nlohmann\thirdparty\hedley\hedley_undef.hpp" />
     <ClInclude Include="dependencies\include\stb\stb_image.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
@@ -534,8 +582,11 @@
     <ClInclude Include="imgui\imstb_rectpack.h" />
     <ClInclude Include="imgui\imstb_textedit.h" />
     <ClInclude Include="imgui\imstb_truetype.h" />
+    <ClInclude Include="MaterialType.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="shaders\shader.h" />
+    <ClInclude Include="worldFactory.h" />
+    <ClInclude Include="WorldObject.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="dependencies\include\assimp\include\assimp\.editorconfig" />
@@ -714,6 +765,9 @@
     <None Include="shaders\pyramid.fs" />
     <None Include="shaders\pyramid.vs" />
     <None Include="shaders\temp.fs" />
+    <None Include="shaders\universal_lit.fs" />
+    <None Include="shaders\universal_lit.vs" />
+    <None Include="world.json" />
     <None Include="x64\Debug\openGL3D.tlog\CL.command.1.tlog" />
     <None Include="x64\Debug\openGL3D.tlog\CL.read.1.tlog" />
     <None Include="x64\Debug\openGL3D.tlog\CL.write.1.tlog" />

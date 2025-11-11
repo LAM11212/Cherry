@@ -1,0 +1,20 @@
+{
+    "objects": [
+        {
+            "type": "floor",
+            "position": [ 0, -1, 0 ]
+        },
+        {
+            "type": "wall",
+            "position": [ 10, 3, 0 ]
+        },
+        {
+            "type": "crate",
+            "position": [ 5, 0, 5 ]
+        },
+        {
+            "type": "light_emitter",
+            "position": [ 0, 10, 0 ]
+        }
+    ]
+}
