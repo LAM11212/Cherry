@@ -52,12 +52,18 @@ std::vector<WorldObject> WorldFactory::loadWorld(const std::string& path) {
 
 	for (auto& objData : data["objects"]) {
 		std::string type = objData["type"];
+		std::cout << "object type: " << type << std::endl;
 		glm::vec3 pos = glm::vec3(
 			objData["position"][0],
 			objData["position"][1],
 			objData["position"][2]
 		);
+		std::cout << "position: " << pos.x << ", " << pos.y << ", " << pos.z << std::endl;
 		objects.push_back(fromPrefab(type, pos));
+	}
+
+	if (objects.empty()) {
+		std::cerr << "No objects found in the json file: " << path << std::endl;
 	}
 
 	return objects;

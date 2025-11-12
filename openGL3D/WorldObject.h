@@ -12,5 +12,10 @@ struct WorldObject {
 	void render(GLuint cubeVAO,
 		Shader& shader,
 		bool lightCasters,
-		bool flashLight);
+		bool flashLight,
+		glm::mat4 projection,
+		glm::mat4 view);
+
 };
+
+void InitWorldShaders();

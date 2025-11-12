@@ -90,8 +90,6 @@ float quadVertices[] = {
      1.0f,  1.0f,   1.0f, 1.0f  // top-right
 };
 
-std::vector<WorldObject> worldObjects = WorldFactory::loadWorld("world.json");
-
 // shaders
 // -------
 //Shader* renderShaders(WorldObject obj, Shader& lightingShader, Shader& basicLightingShader, Shader& lightingMap, Shader& light_casters, Shader& flashlight);
@@ -137,6 +135,10 @@ int main()
     // configure global opengl state
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
+
+    InitWorldShaders();
+    std::vector<WorldObject> worldObjects = WorldFactory::loadWorld("world.json");
+	std::cout << "Total world objects loaded: " << worldObjects.size() << std::endl;
 
     // shaders
     // -------
@@ -435,7 +437,7 @@ int main()
 
         // custom view/projection transformations
         for (auto& obj : worldObjects) {
-			obj.render(cubeVAO, horrorShader, true, true);
+			obj.render(cubeVAO, horrorShader, true, true, projection, view);
         }
 
         // world transformation
