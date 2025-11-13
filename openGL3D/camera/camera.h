@@ -22,9 +22,9 @@ const float SENSITIVITY = 0.1f;
 const float ZOOM = 45.0f;
 
 //player movement vars:
-extern float verticalVelocity = 0.0f;
-extern bool isJumping = false;
-extern float groundHeight = 0.0f;
+extern float verticalVelocity;
+extern bool isJumping;
+extern float groundHeight;
 
 class Camera {
 public:

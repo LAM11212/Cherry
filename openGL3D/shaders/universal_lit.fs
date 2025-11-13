@@ -63,6 +63,8 @@ void main()
     specular *= attenuation;
 
     vec3 result = ambient + diffuse + specular;
+
+    // we assume all of these will be textured
     FragColor = vec4(result, 1.0);
 }
 

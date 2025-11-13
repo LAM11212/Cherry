@@ -133,6 +133,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="camera\camera.cpp" />
     <ClCompile Include="dependencies\include\glm\detail\glm.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="imgui\imgui.cpp" />
@@ -798,6 +799,7 @@
     <Image Include="textures\container2.png" />
     <Image Include="textures\liminalBG.jpg" />
     <Image Include="textures\obama.jpg" />
+    <Image Include="textures\stoneTexture.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

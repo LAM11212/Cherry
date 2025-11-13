@@ -9,4 +9,5 @@ class WorldFactory {
 public:
 	static WorldObject fromPrefab(const std::string& type, const glm::vec3& position);
 	static std::vector<WorldObject> loadWorld(const std::string& path);
+	static unsigned int loadTexture(char const* path);
 };

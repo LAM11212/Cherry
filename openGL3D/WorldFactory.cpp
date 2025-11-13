@@ -15,16 +15,19 @@ WorldObject WorldFactory::fromPrefab(const std::string& type, const glm::vec3& p
 	{
 		obj.scale = { 20.0f, 0.2f, 20.0f };
 		obj.material = MaterialType::Textured;
+		obj.textureID = loadTexture("textures/stoneTexture.jpg");
 	}
 	else if (type == "crate")
 	{
 		obj.scale = { 1.0f, 1.0f, 1.0f };
 		obj.material = MaterialType::Textured;
+		obj.textureID = loadTexture("textures/container2.png");
 	}
 	else if (type == "wall")
 	{
 		obj.scale = { 0.2f, 8.0f, 10.0f };
 		obj.material = MaterialType::Textured;
+		obj.textureID = loadTexture("backroomswall.jpeg");
 	}
 	else if (type == "light_emitter")
 	{
@@ -58,7 +61,6 @@ std::vector<WorldObject> WorldFactory::loadWorld(const std::string& path) {
 			objData["position"][1],
 			objData["position"][2]
 		);
-		std::cout << "position: " << pos.x << ", " << pos.y << ", " << pos.z << std::endl;
 		objects.push_back(fromPrefab(type, pos));
 	}
 
@@ -67,4 +69,42 @@ std::vector<WorldObject> WorldFactory::loadWorld(const std::string& path) {
 	}
 
 	return objects;
+}
+
+unsigned int WorldFactory::loadTexture(char const* path) {
+	unsigned int textureID;
+	glGenTextures(1, &textureID);
+
+	stbi_set_flip_vertically_on_load(true);
+
+	int width, height, nrComponents;
+	unsigned char* data = stbi_load(path, &width, &height, &nrComponents, 0);
+	if (data) {
+		GLenum format;
+		if (nrComponents == 1)
+			format = GL_RED;
+		else if (nrComponents == 3)
+			format = GL_RGB;
+		else if (nrComponents == 4)
+			format = GL_RGBA;
+
+		glBindTexture(GL_TEXTURE_2D, textureID);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		std::cout << "Loading texture: " << path << std::endl;
+		std::cout << "Width: " << width << " Height: " << height << " Components: " << nrComponents << std::endl;
+		stbi_image_free(data);
+	}
+	else {
+		std::cout << "Texture failed to load at path: " << path << std::endl;
+		stbi_image_free(data);
+	}
+	return textureID;
 }

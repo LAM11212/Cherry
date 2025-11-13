@@ -1,15 +1,16 @@
 #include "WorldObject.h"
 #include "shaders/shader.h"
+#include "camera/camera.h"
 #include <glm/gtc/matrix_transform.hpp>
 
 static Shader* lightCasterShader = nullptr;
 static Shader* colorShader = nullptr;
 static Shader* universalShader = nullptr;
 
-void setBasicShaderUniforms(Shader& shader, bool flashLight);
+void setBasicShaderUniforms(Shader& shader, bool flashLight, Camera& camera);
 void InitWorldShaders();
 
-Shader* renderShaders(const WorldObject& obj, Shader& shader, bool lightCasters, bool flashLight)
+Shader* renderShaders(const WorldObject& obj, Shader& shader, bool lightCasters, bool flashLight, Camera& camera)
 {
 
     Shader* activeShader = nullptr;
@@ -19,11 +20,11 @@ Shader* renderShaders(const WorldObject& obj, Shader& shader, bool lightCasters,
     {
     case MaterialType::Colored: 
         activeShader = universalShader;
-        setBasicShaderUniforms(*activeShader, flashLight);
+        setBasicShaderUniforms(*activeShader, flashLight, camera);
         break;
     case MaterialType::Textured: 
 		activeShader = universalShader;
-        setBasicShaderUniforms(*activeShader, flashLight);
+        setBasicShaderUniforms(*activeShader, flashLight, camera);
         break;
     case MaterialType::LightEmissive: 
         //this case is reserved for objects that will cast lighting over other objects
@@ -58,9 +59,9 @@ Shader* renderShaders(const WorldObject& obj, Shader& shader, bool lightCasters,
     return activeShader;
 }
 
-void WorldObject::render(GLuint cubeVAO, Shader& shader, bool lightCasters, bool flashLight, glm::mat4 projection, glm::mat4 view) 
+void WorldObject::render(GLuint cubeVAO, Shader& shader, bool lightCasters, bool flashLight, glm::mat4 projection, glm::mat4 view, Camera& camera) 
 {
-	Shader* activeShader = renderShaders(*this, shader, lightCasters, flashLight);
+	Shader* activeShader = renderShaders(*this, shader, lightCasters, flashLight, camera);
     if (!activeShader) {
         std::cerr << "active shader is null" << std::endl;
         return;
@@ -78,18 +79,20 @@ void WorldObject::render(GLuint cubeVAO, Shader& shader, bool lightCasters, bool
 	{
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, textureID);
+        activeShader->setInt("material.diffuse", 0);
 	}
 
 	glBindVertexArray(cubeVAO);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 }
 
-void setBasicShaderUniforms(Shader& shader, bool flashLight)
+void setBasicShaderUniforms(Shader& shader, bool flashLight, Camera& camera)
 {
     shader.use();
-    shader.setVec3("light.position", glm::vec3(0.0f, 0.0f, 3.0f)); // camera position
-    shader.setVec3("light.direction", glm::vec3(0.0f, 0.0f, -1.0f)); // camera front
+    shader.setVec3("light.position", camera.Position); // camera position
+    shader.setVec3("light.direction", camera.Front); // camera front
     shader.setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
+    shader.setFloat("light.outerCutOff", glm::cos(glm::radians(17.5f)));
     shader.setVec3("viewPos", glm::vec3(0.0f, 0.0f, 3.0f)); // camera position
 
     shader.setVec3("light.ambient", glm::vec3(0.1f));

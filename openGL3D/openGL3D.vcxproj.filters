@@ -57,6 +57,9 @@
     <ClCompile Include="WorldFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="camera\camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imconfig.h">
@@ -1882,6 +1885,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="textures\obama.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\stoneTexture.jpg">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

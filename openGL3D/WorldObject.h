@@ -1,6 +1,7 @@
 #pragma once
 #include <glm/glm.hpp>
 #include "shaders/Shader.h"
+#include "camera/camera.h"
 #include "MaterialType.h"
 
 struct WorldObject {
@@ -14,7 +15,8 @@ struct WorldObject {
 		bool lightCasters,
 		bool flashLight,
 		glm::mat4 projection,
-		glm::mat4 view);
+		glm::mat4 view,
+		Camera& camera);
 
 };
 

@@ -437,7 +437,7 @@ int main()
 
         // custom view/projection transformations
         for (auto& obj : worldObjects) {
-			obj.render(cubeVAO, horrorShader, true, true, projection, view);
+			obj.render(cubeVAO, horrorShader, true, true, projection, view, camera);
         }
 
         // world transformation

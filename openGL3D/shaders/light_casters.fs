@@ -52,6 +52,7 @@ void main()
     diffuse *= attenuation;
     specular *= attenuation;
         
-    vec3 result = ambient + diffuse + specular;
+    vec3 color = texture(material.diffuse, TexCoords).rgb;
+    vec3 result = (ambient + diffuse + specular) * color;
     FragColor = vec4(result, 1.0);
 } 
