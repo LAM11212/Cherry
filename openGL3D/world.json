@@ -14,7 +14,7 @@
         },
         {
             "type": "light_emitter",
-            "position": [ 0, 10, 0 ]
+            "position": [ 0, 3, 0 ]
         }
     ]
 }

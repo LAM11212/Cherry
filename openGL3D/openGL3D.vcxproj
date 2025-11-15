@@ -146,6 +146,7 @@
     <ClCompile Include="mesh.h" />
     <ClCompile Include="openGL3D.cpp" />
     <ClCompile Include="stb_image.cpp" />
+    <ClCompile Include="WorldEditor.cpp" />
     <ClCompile Include="WorldFactory.cpp" />
     <ClCompile Include="WorldObject.cpp" />
   </ItemGroup>
@@ -586,6 +587,7 @@
     <ClInclude Include="MaterialType.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="shaders\shader.h" />
+    <ClInclude Include="WorldEditor.h" />
     <ClInclude Include="worldFactory.h" />
     <ClInclude Include="WorldObject.h" />
   </ItemGroup>

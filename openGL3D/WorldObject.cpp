@@ -95,7 +95,7 @@ void setBasicShaderUniforms(Shader& shader, bool flashLight, Camera& camera)
     shader.setFloat("light.outerCutOff", glm::cos(glm::radians(17.5f)));
     shader.setVec3("viewPos", glm::vec3(0.0f, 0.0f, 3.0f)); // camera position
 
-    shader.setVec3("light.ambient", glm::vec3(0.1f));
+    shader.setVec3("light.ambient", glm::vec3(0.5f));
     shader.setVec3("light.diffuse", glm::vec3(0.8f));
     shader.setVec3("light.specular", glm::vec3(1.0f));
     shader.setFloat("light.constant", 1.0f);

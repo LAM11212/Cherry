@@ -27,7 +27,7 @@ WorldObject WorldFactory::fromPrefab(const std::string& type, const glm::vec3& p
 	{
 		obj.scale = { 0.2f, 8.0f, 10.0f };
 		obj.material = MaterialType::Textured;
-		obj.textureID = loadTexture("backroomswall.jpeg");
+		obj.textureID = loadTexture("textures/backroomswall.jpeg");
 	}
 	else if (type == "light_emitter")
 	{

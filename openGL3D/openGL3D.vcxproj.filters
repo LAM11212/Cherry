@@ -60,6 +60,9 @@
     <ClCompile Include="camera\camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="WorldEditor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imconfig.h">
@@ -1374,6 +1377,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="dependencies\include\nlohmann\ordered_map.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldEditor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
