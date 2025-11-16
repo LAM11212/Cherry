@@ -14,6 +14,7 @@
 #include "WorldObject.h"
 #include "MaterialType.h"
 #include "worldFactory.h"
+#include "WorldEditor.h"
 
 
 #include <iostream>
@@ -330,6 +331,10 @@ int main()
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, gunTexture);
 
+    // im gui declaration
+	WorldEditor worldEditor(window);
+
+
     //Gun.Draw(gunShader);
 
 	std::cout << "BG Texture ID: " << bgTexture << std::endl;
@@ -365,15 +370,21 @@ int main()
         // render
         // ------
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+        glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glDisable(GL_DEPTH_TEST);
 
-        backgroundShader.use();
+        worldEditor.BeginFrame();
+        worldEditor.DrawUI();
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+       /* backgroundShader.use();
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, bgTexture);
         backgroundShader.setInt("bgTexture", 1);
         glBindVertexArray(quadVAO);
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        glDrawArrays(GL_TRIANGLES, 0, 6);*/
         //glBindVertexArray(0);
         glEnable(GL_DEPTH_TEST);
 

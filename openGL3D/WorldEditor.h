@@ -26,17 +26,18 @@ public:
 		ImGui_ImplOpenGL3_Init("#version 330");
 	}
 
-	void InitFrame() {
+	void BeginFrame() {
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
+	}
 
+	void DrawUI() {
 		ImGui::Begin("World Editor");
 		ImGui::Text("Edit your world here!");
 		ImGui::End();
-
-		ImGui::Render();
 	}
+
 };
 
 
