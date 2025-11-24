@@ -35,6 +35,18 @@ public:
 	void DrawUI() {
 		ImGui::Begin("World Editor");
 		ImGui::Text("Edit your world here!");
+
+		float scale = 1.0f;
+		ImGui::SliderFloat("Scale", &scale, 0.0f, 100.0f);
+
+		float xPos;
+		ImGui::SliderFloat("X", &xPos, -1000.0f, 1000.0f);
+
+		float yPos;
+		ImGui::SliderFloat("Y", &yPos, -1000.0f, 1000.0f);
+
+		float zPos;
+		ImGui::SliderFloat("Z", &zPos, -1000.0f, 1000.0f);
 		ImGui::End();
 	}
 
