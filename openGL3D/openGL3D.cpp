@@ -164,6 +164,7 @@ int main()
         std::cout << "Loaded model with: " << Gun.meshes.size() << " meshes\n";
     }
 
+
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
     float vertices[] = {
