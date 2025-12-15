@@ -311,7 +311,6 @@ int main()
 
     unsigned int pyramidTexture = loadTexture("textures/obama.jpg");
 
-
     unsigned int diffuseMap = loadTexture("textures/backroomswall.jpeg");
     std::cout << "Loaded texture ID: " << diffuseMap << std::endl;
     if (diffuseMap == 0)
