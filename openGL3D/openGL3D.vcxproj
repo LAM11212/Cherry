@@ -149,6 +149,7 @@
     <ClCompile Include="WorldEditor.cpp" />
     <ClCompile Include="WorldFactory.cpp" />
     <ClCompile Include="WorldObject.cpp" />
+    <ClCompile Include="WorldRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera\camera.h" />
@@ -575,6 +576,7 @@
     <ClInclude Include="dependencies\include\nlohmann\thirdparty\hedley\hedley.hpp" />
     <ClInclude Include="dependencies\include\nlohmann\thirdparty\hedley\hedley_undef.hpp" />
     <ClInclude Include="dependencies\include\stb\stb_image.h" />
+    <ClInclude Include="Transform.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
     <ClInclude Include="imgui\imgui_impl_glfw.h" />
