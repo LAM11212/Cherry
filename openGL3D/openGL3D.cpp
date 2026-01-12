@@ -55,10 +55,10 @@ struct AABB {
 };
 
 AABB getAABB(const WorldObject& obj) {
-    glm::vec3 half = obj.scale * 0.5f;
+    glm::vec3 half = obj.transform.scale * 0.5f;
     return {
-        obj.position - half,
-        obj.position + half
+        obj.transform.position - half,
+        obj.transform.position + half
     };
 }
 
@@ -452,7 +452,7 @@ int main()
 
         // custom view/projection transformations
         for (auto& obj : worldObjects) {
-			obj.render(cubeVAO, horrorShader, true, true, projection, view, camera);
+			obj.Render(cubeVAO, true, projection, view, camera);
         }
 
         // world transformation

@@ -10,12 +10,6 @@
 #include <string>
 #include <nlohmann/json.hpp>
 
-struct Transform {
-	glm::vec3 position;
-	glm::vec3 rotation;
-	glm::vec3 scale;
-};
-
 std::vector<WorldObject> worldObjects;
 
 class WorldEditor {
@@ -42,8 +36,8 @@ public:
 
 	void DrawUI() {
 		ImGui::Begin("World Editor");
-		
-		for(int i = 0; i < worldObjects.size(); i++)
+		ImGui::End();
+		//for(int i = 0; i < worldObjects.size(); i++)
 	}
 
 };

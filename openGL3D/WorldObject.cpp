@@ -1,18 +1,18 @@
-#include "WorldObject.h"
-#include "shaders/shader.h"
-#include "camera/camera.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
+#include "WorldObject.h"
+#include "shaders/shader.h"
+#include "camera/camera.h"
 
 static Shader* lightCasterShader = nullptr;
 static Shader* colorShader = nullptr;
 static Shader* universalShader = nullptr;
 
-void SetBasicShaderUniforms(Shader& shader, bool flashLight, Camera& camera);
+void SetBasicShaderUniforms(Shader& shader, bool flashLight, const Camera& camera);
 void InitWorldShaders();
 
-static Shader* GetShaderForObject(const WorldObject& obj, bool flashLight, const Camera& camera) 
+static Shader* GetShaderForObject(const WorldObject& obj, bool flashLight, Camera& camera) 
 {
 	Shader* shader = nullptr;
 
@@ -53,7 +53,7 @@ static Shader* GetShaderForObject(const WorldObject& obj, bool flashLight, const
 	return shader;
 }
 
-void WorldObject::Render(GLuint cubeVAO, bool flashLight, const glm::mat4& projection, const glm::mat4& view, const Camera& camera)
+void WorldObject::Render(GLuint cubeVAO, bool flashLight, const glm::mat4& projection, const glm::mat4& view, Camera& camera)
 {
 	Shader* shader = GetShaderForObject(*this, flashLight, camera);
 	if (!shader) 
@@ -69,7 +69,7 @@ void WorldObject::Render(GLuint cubeVAO, bool flashLight, const glm::mat4& proje
 	shader->setMat4("view", view);
 	shader->setMat4("projection", projection);
 
-	if (material == MaterialType::Textured && textureID != 0)
+	if (this->material == MaterialType::Textured && this->textureID != 0)
 	{
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, textureID);
@@ -80,7 +80,7 @@ void WorldObject::Render(GLuint cubeVAO, bool flashLight, const glm::mat4& proje
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 }
 
-static void SetBasicShaderUniforms(Shader& shader, bool flashLight, const Camera& camera) 
+void SetBasicShaderUniforms(Shader& shader, bool flashLight, const Camera& camera) 
 {
 	shader.use();
 

@@ -1,5 +1,6 @@
 #include "worldFactory.h"
 #include "stb_image.h"
+#include "MaterialType.h"
 #include <fstream>
 #include <iostream>
 #include <nlohmann/json.hpp>
@@ -9,29 +10,29 @@ using json = nlohmann::json;
 WorldObject WorldFactory::fromPrefab(const std::string& type, const glm::vec3& position)
 {
 	WorldObject obj{};
-	obj.position = position;
+	obj.type = type;
 
 	if (type == "floor") 
 	{
-		obj.scale = { 20.0f, 0.2f, 20.0f };
+		obj.transform.scale = { 20.0f, 0.2f, 20.0f };
 		obj.material = MaterialType::Textured;
 		obj.textureID = loadTexture("textures/stoneTexture.jpg");
 	}
 	else if (type == "crate")
 	{
-		obj.scale = { 1.0f, 1.0f, 1.0f };
+		obj.transform.scale = { 1.0f, 1.0f, 1.0f };
 		obj.material = MaterialType::Textured;
 		obj.textureID = loadTexture("textures/container2.png");
 	}
 	else if (type == "wall")
 	{
-		obj.scale = { 0.2f, 8.0f, 10.0f };
+		obj.transform.scale = { 0.2f, 8.0f, 10.0f };
 		obj.material = MaterialType::Textured;
 		obj.textureID = loadTexture("textures/backroomswall.jpeg");
 	}
 	else if (type == "light_emitter")
 	{
-		obj.scale = { 0.5f, 0.5f, 0.5f };
+		obj.transform.scale = { 0.5f, 0.5f, 0.5f };
 		obj.material = MaterialType::LightEmissive;
 	}
 	else {

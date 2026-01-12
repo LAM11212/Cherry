@@ -3,27 +3,17 @@
 #include <string>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+#include "MaterialType.h"
+#include "Transform.h"
 
 // Forward declarations
 class Shader;
 class Camera;
 
-enum class MaterialType {
-    Colored,
-    Textured,
-    LightEmissive
-};
-
-struct Transform {
-    glm::vec3 position{ 0.0f, 0.0f, 0.0f };
-    glm::vec3 rotation{ 0.0f, 0.0f, 0.0f }; // degrees
-    glm::vec3 scale{ 1.0f, 1.0f, 1.0f };
-
-    glm::mat4 getMatrix() const;
-};
+//void SetBasicShaderUniforms(Shader& shader, bool flashLight, const Camera& camera);
 
 struct WorldObject {
-    std::string type;          // prefab type (e.g. "crate", "wall")
+    std::string type;          
     Transform transform;
 
     MaterialType material = MaterialType::Colored;
@@ -34,7 +24,7 @@ struct WorldObject {
         bool flashLight,
         const glm::mat4& projection,
         const glm::mat4& view,
-        const Camera& camera
+        Camera& camera
     );
 
 };
