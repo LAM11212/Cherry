@@ -12,6 +12,8 @@ WorldObject WorldFactory::fromPrefab(const std::string& type, const glm::vec3& p
 	WorldObject obj{};
 	obj.type = type;
 
+	obj.transform.position = position;
+
 	if (type == "floor") 
 	{
 		obj.transform.scale = { 20.0f, 0.2f, 20.0f };
