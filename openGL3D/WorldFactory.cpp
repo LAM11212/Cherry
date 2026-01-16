@@ -6,6 +6,7 @@
 #include <nlohmann/json.hpp>
 
 using json = nlohmann::json;
+std::vector<WorldObject> objects;
 
 WorldObject WorldFactory::fromPrefab(const std::string& type, const glm::vec3& position)
 {
@@ -45,7 +46,6 @@ WorldObject WorldFactory::fromPrefab(const std::string& type, const glm::vec3& p
 }
 
 std::vector<WorldObject> WorldFactory::loadWorld(const std::string& path) {
-	std::vector<WorldObject> objects;
 	std::ifstream file(path);
 
 	if (!file.is_open()) {
@@ -110,4 +110,12 @@ unsigned int WorldFactory::loadTexture(char const* path) {
 		stbi_image_free(data);
 	}
 	return textureID;
+}
+
+std::vector<WorldObject>& WorldFactory::getObjects() {
+	return objects;
+}
+
+void WorldFactory::clearObjects() {
+	objects.clear();
 }

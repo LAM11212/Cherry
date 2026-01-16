@@ -6,15 +6,19 @@
 #include "imgui_impl_opengl3.h"
 #include <GLFW/glfw3.h>
 #include "WorldObject.h"
+#include "WorldFactory.h"
 #include <vector>
 #include <string>
 #include <nlohmann/json.hpp>
 
-std::vector<WorldObject> worldObjects;
+class WorldFactory;
 
 class WorldEditor {
 public:
 	GLFWwindow* window;
+
+	std::vector<WorldObject>* EditableWorldObjects = nullptr;
+	WorldObject* selectedObject = nullptr;
 
 	WorldEditor(GLFWwindow* window) {
 		this->window = window;
@@ -34,10 +38,29 @@ public:
 		ImGui::NewFrame();
 	}
 
+	void BindWorld(WorldFactory& factory) {
+		EditableWorldObjects = &factory.getObjects();
+	}
+
 	void DrawUI() {
 		ImGui::Begin("World Editor");
+		
+		if (!EditableWorldObjects) {
+			ImGui::Text("No world bound.");
+			ImGui::End();
+			return;
+		}
+
+		for (int i = 0; i < EditableWorldObjects->size(); i++) {
+			WorldObject& obj = (*EditableWorldObjects)[i];
+			const bool selected = (selectedObject == &obj);
+
+			if (ImGui::Selectable(obj.type.c_str(), selected)) {
+				selectedObject = &obj;
+			}
+		}
+
 		ImGui::End();
-		//for(int i = 0; i < worldObjects.size(); i++)
 	}
 
 };

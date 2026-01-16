@@ -145,6 +145,10 @@ int main()
     InitWorldShaders();
     std::vector<WorldObject> worldObjects = WorldFactory::loadWorld("world.json");
 	std::cout << "Total world objects loaded: " << worldObjects.size() << std::endl;
+    WorldFactory worldFactory;
+    WorldEditor editor(window);
+	editor.BindWorld(worldFactory);
+
 
     // shaders
     // -------
@@ -335,9 +339,6 @@ int main()
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, gunTexture);
 
-    // im gui declaration
-	WorldEditor worldEditor(window);
-
 
     //Gun.Draw(gunShader);
 
@@ -381,8 +382,8 @@ int main()
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glDisable(GL_DEPTH_TEST);
 
-        worldEditor.BeginFrame();
-        worldEditor.DrawUI();
+        editor.BeginFrame();
+        editor.DrawUI();
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
