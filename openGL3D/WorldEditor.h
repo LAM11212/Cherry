@@ -67,6 +67,8 @@ public:
 
 	void Inspector() {
 		ImGui::Begin("Inspector");
+		static bool snap = false;
+		ImGui::Checkbox("Snap to Grid", &snap);
 
 		if (selectedObject) {
 			ImGui::Text("Selected Object");
@@ -83,6 +85,11 @@ public:
 		else {
 			ImGui::TextDisabled("No object selected");
 		}
+
+		if (snap && selectedObject) {
+			selectedObject->transform.position = glm::round(selectedObject->transform.position);
+		}
+
 		ImGui::End();
 	}
 
