@@ -55,7 +55,9 @@ public:
 			WorldObject& obj = (*EditableWorldObjects)[i];
 			const bool selected = (selectedObject == &obj);
 
-			if (ImGui::Selectable(obj.type.c_str(), selected)) {
+			std::string label = obj.type + "##" + std::to_string(i);
+
+			if (ImGui::Selectable(label.c_str(), selected)) {
 				selectedObject = &obj;
 			}
 		}
