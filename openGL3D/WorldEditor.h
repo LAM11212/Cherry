@@ -65,6 +65,27 @@ public:
 		ImGui::End();
 	}
 
+	void Inspector() {
+		ImGui::Begin("Inspector");
+
+		if (selectedObject) {
+			ImGui::Text("Selected Object");
+			ImGui::Separator();
+
+			ImGui::Text("Type: %s", selectedObject->type.c_str());
+
+			ImGui::Spacing();
+
+			ImGui::DragFloat3("Position", &selectedObject->transform.position.x, 0.1f);
+			ImGui::DragFloat3("Rotation", &selectedObject->transform.rotation.x, 1.0f);
+			ImGui::DragFloat3("Scale", &selectedObject->transform.scale.x, 0.1f, 0.01f, 100.0f);
+		}
+		else {
+			ImGui::TextDisabled("No object selected");
+		}
+		ImGui::End();
+	}
+
 };
 
 

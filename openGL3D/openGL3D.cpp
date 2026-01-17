@@ -150,6 +150,7 @@ int main()
 	editor.BindWorld(worldFactory);
 
 
+
     // shaders
     // -------
     Shader horrorShader("shaders/universal_lit.vs", "shaders/universal_lit.fs");
@@ -384,6 +385,7 @@ int main()
 
         editor.BeginFrame();
         editor.DrawUI();
+        editor.Inspector();
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
