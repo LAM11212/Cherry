@@ -45,12 +45,13 @@ WorldObject WorldFactory::fromPrefab(const std::string& type, const glm::vec3& p
 	return obj;
 }
 
-std::vector<WorldObject> WorldFactory::loadWorld(const std::string& path) {
+void WorldFactory::loadWorld(const std::string& path) {
+	objects.clear();
 	std::ifstream file(path);
 
 	if (!file.is_open()) {
 		std::cerr << "Failed to open world file: " << path << "\n";
-		return objects;
+		return;
 	}
 
 	json data;
@@ -64,14 +65,15 @@ std::vector<WorldObject> WorldFactory::loadWorld(const std::string& path) {
 			objData["position"][1],
 			objData["position"][2]
 		);
-		objects.push_back(fromPrefab(type, pos));
+
+		WorldObject obj = fromPrefab(type, pos);
+		obj.transform.position = pos;
+		objects.push_back(obj);
 	}
 
 	if (objects.empty()) {
 		std::cerr << "No objects found in the json file: " << path << std::endl;
 	}
-
-	return objects;
 }
 
 unsigned int WorldFactory::loadTexture(char const* path) {

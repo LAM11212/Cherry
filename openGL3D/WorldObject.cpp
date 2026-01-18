@@ -69,6 +69,8 @@ void WorldObject::Render(GLuint cubeVAO, bool flashLight, const glm::mat4& proje
 	shader->setMat4("view", view);
 	shader->setMat4("projection", projection);
 
+	//std::cout << "model matrix:\n" << transform.position.x << ", " << transform.position.y << ", " << transform.position.z << "\n";
+
 	if (this->material == MaterialType::Textured && this->textureID != 0)
 	{
 		glActiveTexture(GL_TEXTURE0);

@@ -75,27 +75,28 @@ public:
 			ImGui::Separator();
 
 			ImGui::Text("Type: %s", selectedObject->type.c_str());
-
 			ImGui::Spacing();
 
-			ImGui::DragFloat3("Position", &selectedObject->transform.position.x, 0.1f);
+			if (ImGui::DragFloat3("Position", &selectedObject->transform.position.x, 0.1f)) {
+				if (snap) {
+					std::cout << "this is getting called" << std::endl;
+					selectedObject->transform.position = glm::round(selectedObject->transform.position);
+				}
+				else {
+					selectedObject->transform.position = selectedObject->transform.position;
+				}
+			}
+
 			ImGui::DragFloat3("Rotation", &selectedObject->transform.rotation.x, 1.0f);
 			ImGui::DragFloat3("Scale", &selectedObject->transform.scale.x, 0.1f, 0.01f, 100.0f);
-		}
-		else {
-			ImGui::TextDisabled("No object selected");
-		}
 
-		if (snap && selectedObject) {
-			selectedObject->transform.position = glm::round(selectedObject->transform.position);
+
+		}   else {
+			ImGui::TextDisabled("No object selected");
 		}
 
 		ImGui::End();
 	}
 
 };
-
-
-
-
 #endif

@@ -143,9 +143,10 @@ int main()
     glEnable(GL_DEPTH_TEST);
 
     InitWorldShaders();
-    std::vector<WorldObject> worldObjects = WorldFactory::loadWorld("world.json");
-	std::cout << "Total world objects loaded: " << worldObjects.size() << std::endl;
     WorldFactory worldFactory;
+	worldFactory.loadWorld("world.json");
+	std::vector<WorldObject>& worldObjects = worldFactory.getObjects();
+
     WorldEditor editor(window);
 	editor.BindWorld(worldFactory);
 
@@ -381,13 +382,11 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glDisable(GL_DEPTH_TEST);
+        //glDisable(GL_DEPTH_TEST);
 
         editor.BeginFrame();
         editor.DrawUI();
         editor.Inspector();
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
        /* backgroundShader.use();
         glActiveTexture(GL_TEXTURE1);
@@ -460,6 +459,9 @@ int main()
         for (auto& obj : worldObjects) {
 			obj.Render(cubeVAO, true, projection, view, camera);
         }
+
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         // world transformation
         //glm::mat4 lightmodel = glm::mat4(1.0f);
