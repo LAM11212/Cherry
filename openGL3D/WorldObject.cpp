@@ -19,6 +19,11 @@ static Shader* GetShaderForObject(const WorldObject& obj, bool flashLight, Camer
 	switch (obj.material)
 	{
 	case MaterialType::Colored:
+		shader = colorShader;
+		shader->use();
+		shader->setVec3("objectColor", glm::vec3(0.5f));
+		shader->setVec3("lightColor", glm::vec3(0.2f));
+		break;
 	case MaterialType::Textured:
 		shader = universalShader;
 		SetBasicShaderUniforms(*shader, flashLight, camera);

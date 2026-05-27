@@ -12,4 +12,5 @@ public:
 	static unsigned int loadTexture(char const* path);
 	std::vector<WorldObject>& getObjects();
 	void clearObjects();
+	static void createObject(const std::string type);
 };

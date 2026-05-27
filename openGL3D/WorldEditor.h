@@ -79,7 +79,6 @@ public:
 
 			if (ImGui::DragFloat3("Position", &selectedObject->transform.position.x, 0.1f)) {
 				if (snap) {
-					std::cout << "this is getting called" << std::endl;
 					selectedObject->transform.position = glm::round(selectedObject->transform.position);
 				}
 				else {
@@ -95,6 +94,17 @@ public:
 			ImGui::TextDisabled("No object selected");
 		}
 
+		ImGui::End();
+	}
+
+	// the menu that will be used to spawn new objects into the engine.
+	void ObjectMenu() {
+		ImGui::Begin("ObjectMenu");
+		bool selected = false;
+		if(ImGui::Selectable("cube", selected)) {
+			selected = !selected;
+			WorldFactory::createObject("cube");
+		}
 		ImGui::End();
 	}
 

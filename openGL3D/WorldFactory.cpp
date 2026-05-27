@@ -38,6 +38,11 @@ WorldObject WorldFactory::fromPrefab(const std::string& type, const glm::vec3& p
 		obj.transform.scale = { 0.5f, 0.5f, 0.5f };
 		obj.material = MaterialType::LightEmissive;
 	}
+	else if (type == "cube")
+	{
+		obj.transform.scale = { 1.0f, 1.0f, 1.0f };
+		obj.material = MaterialType::Colored;
+	}
 	else {
 		std::cerr << "Unknown prefab type: " << type << std::endl;
 	}
@@ -120,4 +125,14 @@ std::vector<WorldObject>& WorldFactory::getObjects() {
 
 void WorldFactory::clearObjects() {
 	objects.clear();
+}
+
+void WorldFactory::createObject(const std::string type) {
+	if (type == "cube") {
+		glm::vec3 pos = { 0.0f, 0.0f, 0.0f };
+		WorldObject obj = fromPrefab(type, pos);
+		obj.transform.position = pos;
+		obj.material = MaterialType::Colored;
+		objects.push_back(obj);
+	}
 }

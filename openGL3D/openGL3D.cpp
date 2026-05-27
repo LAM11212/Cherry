@@ -387,6 +387,7 @@ int main()
         editor.BeginFrame();
         editor.DrawUI();
         editor.Inspector();
+        editor.ObjectMenu();
 
        /* backgroundShader.use();
         glActiveTexture(GL_TEXTURE1);
