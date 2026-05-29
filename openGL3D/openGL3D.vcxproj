@@ -145,6 +145,7 @@
     <ClCompile Include="imgui\imgui_widgets.cpp" />
     <ClCompile Include="mesh.h" />
     <ClCompile Include="openGL3D.cpp" />
+    <ClCompile Include="WorldShaders.cpp" />
     <ClCompile Include="stb_image.cpp" />
     <ClCompile Include="WorldEditor.cpp" />
     <ClCompile Include="WorldFactory.cpp" />
@@ -576,6 +577,7 @@
     <ClInclude Include="dependencies\include\nlohmann\thirdparty\hedley\hedley.hpp" />
     <ClInclude Include="dependencies\include\nlohmann\thirdparty\hedley\hedley_undef.hpp" />
     <ClInclude Include="dependencies\include\stb\stb_image.h" />
+    <ClInclude Include="WorldShaders.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />

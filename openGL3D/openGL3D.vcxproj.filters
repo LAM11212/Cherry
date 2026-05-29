@@ -66,6 +66,9 @@
     <ClCompile Include="openGL3D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="WorldShaders.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imconfig.h">
@@ -1386,6 +1389,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Transform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldShaders.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

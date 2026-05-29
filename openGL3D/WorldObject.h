@@ -21,7 +21,6 @@ struct WorldObject {
 
     void Render(
         GLuint cubeVAO,
-        bool flashLight,
         const glm::mat4& projection,
         const glm::mat4& view,
         Camera& camera

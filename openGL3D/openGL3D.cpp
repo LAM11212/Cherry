@@ -29,7 +29,7 @@ unsigned int loadTexture(char const* path);
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
-bool DEBUG = true;
+bool DEBUG = false;
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -42,7 +42,7 @@ float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
 // lighting
-glm::vec3 lightPos(-0.5f, -10.0f, -0.2f);
+glm::vec3 lightPos(0.0f, 0.0f, 0.0f);
 
 //player settings
 glm::vec3 playerSize = glm::vec3(0.6f, 0.0f, 0.6f);
@@ -158,6 +158,7 @@ int main()
 	Shader backgroundShader("shaders/bgShader.vs", "shaders/bgShader.fs");
 	Shader gunShader("shaders/gun.vs", "shaders/gun.fs");
     Shader pyramidShader("shaders/pyramid.vs", "shaders/pyramid.fs");
+	Shader worldLightingShader("shaders/light_casters.vs", "shaders/light_casters.fs");
 
     Model Gun("models/futuristic-sci-fi-glock/source/ASM - PBR Metallic Roughness/ASM - PBR Metallic Roughness.fbx");
 
@@ -217,7 +218,6 @@ int main()
         -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f
     };
 
-    // first, configure the cube's VAO (and VBO)
     unsigned int VBO, cubeVAO;
     glGenVertexArrays(1, &cubeVAO);
     glGenBuffers(1, &VBO);
@@ -237,12 +237,10 @@ int main()
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
-    // second, configure the light's VAO (VBO stays the same; the vertices are the same for the light object which is also a 3D cube)
     unsigned int lightCubeVAO;
     glGenVertexArrays(1, &lightCubeVAO);
     glBindVertexArray(lightCubeVAO);
 
-    // we only need to bind to the VBO (to link it with glVertexAttribPointer), no need to fill it; the VBO's data already contains all we need (it's already bound, but we do it again for educational purposes)
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
@@ -345,6 +343,12 @@ int main()
     //Gun.Draw(gunShader);
 
 	std::cout << "BG Texture ID: " << bgTexture << std::endl;
+
+    // world ligting initialization, more in loop below
+    /*worldLightingShader.use();
+    worldLightingShader.setInt("material.diffuse", 0);
+    worldLightingShader.setInt("material.specular", 1);*/
+
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -403,32 +407,31 @@ int main()
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
-        
 
 		gunShader.use();
 		gunShader.setMat4("projection", projection);
 		gunShader.setMat4("view", view);
 
-        pyramidShader.use();
-		pyramidShader.setMat4("projection", projection);
-		pyramidShader.setMat4("view", view);
-        pyramidShader.setInt("texture1", 0);
-        glm::mat4 pyramidModel = glm::mat4(1.0f);
-        //pyramidModel = glm::translate(pyramidModel, glm::vec3(-3.0f, 0.0f, -3.0f));
-        pyramidModel = glm::rotate(pyramidModel, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
-        pyramidModel = glm::scale(pyramidModel, glm::vec3(2.0f));
-		pyramidShader.setMat4("model", pyramidModel);
-        pyramidShader.setVec3("light.position", lightPos);
-		pyramidShader.setVec3("light.ambient", 0.5f, 0.2f, 0.3f);
-        pyramidShader.setVec3("light.diffuse", 0.5f, 0.5f, 1.0f);
-		pyramidShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-        pyramidShader.setFloat("material.shininess", 32.0f);
-		pyramidShader.setMat4("material.diffuse", glm::mat4(1.0f));
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, pyramidTexture);
+  //      pyramidShader.use();
+		//pyramidShader.setMat4("projection", projection);
+		//pyramidShader.setMat4("view", view);
+  //      pyramidShader.setInt("texture1", 0);
+  //      glm::mat4 pyramidModel = glm::mat4(1.0f);
+  //      //pyramidModel = glm::translate(pyramidModel, glm::vec3(-3.0f, 0.0f, -3.0f));
+  //      pyramidModel = glm::rotate(pyramidModel, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
+  //      pyramidModel = glm::scale(pyramidModel, glm::vec3(2.0f));
+		//pyramidShader.setMat4("model", pyramidModel);
+  //      pyramidShader.setVec3("light.position", lightPos);
+		//pyramidShader.setVec3("light.ambient", 0.5f, 0.2f, 0.3f);
+  //      pyramidShader.setVec3("light.diffuse", 0.5f, 0.5f, 1.0f);
+		//pyramidShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+  //      pyramidShader.setFloat("material.shininess", 32.0f);
+		//pyramidShader.setMat4("material.diffuse", glm::mat4(1.0f));
+  //      glActiveTexture(GL_TEXTURE0);
+  //      glBindTexture(GL_TEXTURE_2D, pyramidTexture);
 
-		glBindVertexArray(pyramidVAO);
-        glDrawArrays(GL_TRIANGLES, 0, 18);
+		//glBindVertexArray(pyramidVAO);
+  //      glDrawArrays(GL_TRIANGLES, 0, 18);
 
         //load our gun model and move to camera position
         gunShader.use();
@@ -458,7 +461,7 @@ int main()
 
         // custom view/projection transformations
         for (auto& obj : worldObjects) {
-			obj.Render(cubeVAO, true, projection, view, camera);
+			obj.Render(cubeVAO, projection, view, camera);
         }
 
         ImGui::Render();

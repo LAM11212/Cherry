@@ -4,15 +4,19 @@
 #include "WorldObject.h"
 #include "shaders/shader.h"
 #include "camera/camera.h"
+#include "WorldShaders.h"
 
 static Shader* lightCasterShader = nullptr;
 static Shader* colorShader = nullptr;
 static Shader* universalShader = nullptr;
+static Shader* worldLightingShader = nullptr;
 
-void SetBasicShaderUniforms(Shader& shader, bool flashLight, const Camera& camera);
+
+//void SetBasicShaderUniforms(Shader& shader, const Camera& camera);
 void InitWorldShaders();
+void SetWorldLightUniforms(Shader& shader, const Camera& camera);
 
-static Shader* GetShaderForObject(const WorldObject& obj, bool flashLight, Camera& camera) 
+static Shader* GetShaderForObject(const WorldObject& obj, Camera& camera) 
 {
 	Shader* shader = nullptr;
 
@@ -21,46 +25,36 @@ static Shader* GetShaderForObject(const WorldObject& obj, bool flashLight, Camer
 	case MaterialType::Colored:
 		shader = colorShader;
 		shader->use();
+
 		shader->setVec3("objectColor", glm::vec3(0.5f));
-		shader->setVec3("lightColor", glm::vec3(0.2f));
+
+		SetWorldLightUniforms(*shader, camera);
 		break;
 	case MaterialType::Textured:
 		shader = universalShader;
-		SetBasicShaderUniforms(*shader, flashLight, camera);
-		break;
-
-	case MaterialType::LightEmissive:
-		shader = lightCasterShader;
 		shader->use();
-
-		shader->setVec3("light.position", obj.transform.position);
-		shader->setVec3("viewPos", camera.Position);
-
-		shader->setVec3("light.ambient", glm::vec3(0.2f));
-		shader->setVec3("light.diffuse", glm::vec3(0.5f));
-		shader->setVec3("light.specular", glm::vec3(1.0f));
-
-		shader->setFloat("light.constant", 1.0f);
-		shader->setFloat("light.linear", 0.09f);
-		shader->setFloat("light.quadratic", 0.032f);
-
-		shader->setFloat("material.shininess", 32.0f);
+		universalShader->setVec3("material.direction", worldLight.direction);
+		universalShader->setVec3("material.ambient", worldLight.ambient);
+		universalShader->setVec3("material.diffuse", worldLight.diffuse);
+		universalShader->setVec3("material.specular", worldLight.specular);
 		break;
 
 	default:
 		shader = colorShader;
 		shader->use();
-		shader->setVec3("objectColor", glm::vec3(1.0f));
-		shader->setVec3("lightColor", glm::vec3(1.0f));
+
+		shader->setVec3("objectColor", glm::vec3(0.5f));
+
+		SetWorldLightUniforms(*shader, camera);
 		break;
 	}
 
 	return shader;
 }
 
-void WorldObject::Render(GLuint cubeVAO, bool flashLight, const glm::mat4& projection, const glm::mat4& view, Camera& camera)
+void WorldObject::Render(GLuint cubeVAO, const glm::mat4& projection, const glm::mat4& view, Camera& camera)
 {
-	Shader* shader = GetShaderForObject(*this, flashLight, camera);
+	Shader* shader = GetShaderForObject(*this, camera);
 	if (!shader) 
 	{
 		std::cerr << "WorldObject::Render:FAILED:: SHADER IS NULL\n";
@@ -73,6 +67,8 @@ void WorldObject::Render(GLuint cubeVAO, bool flashLight, const glm::mat4& proje
 	shader->setMat4("model", model);
 	shader->setMat4("view", view);
 	shader->setMat4("projection", projection);
+
+	SetWorldLightUniforms(*shader, camera);
 
 	//std::cout << "model matrix:\n" << transform.position.x << ", " << transform.position.y << ", " << transform.position.z << "\n";
 
@@ -87,28 +83,17 @@ void WorldObject::Render(GLuint cubeVAO, bool flashLight, const glm::mat4& proje
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 }
 
-void SetBasicShaderUniforms(Shader& shader, bool flashLight, const Camera& camera) 
+void SetWorldLightUniforms(Shader& shader, const Camera& camera) 
 {
 	shader.use();
 
 	shader.setVec3("viewPos", camera.Position);
 
-	shader.setVec3("light.position", camera.Position);
-	shader.setVec3("light.direction", camera.Front);
+	shader.setVec3("light.direction", worldLight.direction);
 
-	shader.setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
-	shader.setFloat("light.outerCutOff", glm::cos(glm::radians(17.5f)));
-
-	shader.setVec3("light.ambient", glm::vec3(0.5f));
-	shader.setVec3("light.diffuse", glm::vec3(0.8f));
-	shader.setVec3("light.specular", glm::vec3(1.0f));
-
-	shader.setFloat("light.constant", 1.0f);
-	shader.setFloat("light.linear", 0.09f);
-	shader.setFloat("light.quadratic", 0.032f);
-
-	shader.setInt("light.type", flashLight ? 1 : 0);
-	shader.setFloat("material.shininess", 32.0f);
+	shader.setVec3("light.ambient", worldLight.ambient);
+	shader.setVec3("light.diffuse", worldLight.diffuse);
+	shader.setVec3("light.specular", worldLight.specular);
 }
 
 void InitWorldShaders()
@@ -121,6 +106,7 @@ void InitWorldShaders()
 	colorShader = new Shader("shaders/colors.vs", "shaders/colors.fs");
 
 	universalShader = new Shader("shaders/universal_lit.vs", "shaders/universal_lit.fs");
+
 
 	std::cout << "World shaders initialized\n";
 }
