@@ -33,10 +33,12 @@ static Shader* GetShaderForObject(const WorldObject& obj, Camera& camera)
 	case MaterialType::Textured:
 		shader = universalShader;
 		shader->use();
-		universalShader->setVec3("material.direction", worldLight.direction);
-		universalShader->setVec3("material.ambient", worldLight.ambient);
-		universalShader->setVec3("material.diffuse", worldLight.diffuse);
-		universalShader->setVec3("material.specular", worldLight.specular);
+		shader->setVec3("light.direction", worldLight.direction);
+		shader->setVec3("viewPos", camera.Position);
+		shader->setVec3("light.ambient", worldLight.ambient);
+		shader->setVec3("light.diffuse", worldLight.diffuse);
+		shader->setVec3("light.specular", worldLight.specular);
+		shader->setFloat("material.shininess", 32.0f);
 		break;
 
 	default:
@@ -67,8 +69,6 @@ void WorldObject::Render(GLuint cubeVAO, const glm::mat4& projection, const glm:
 	shader->setMat4("model", model);
 	shader->setMat4("view", view);
 	shader->setMat4("projection", projection);
-
-	SetWorldLightUniforms(*shader, camera);
 
 	//std::cout << "model matrix:\n" << transform.position.x << ", " << transform.position.y << ", " << transform.position.z << "\n";
 
@@ -105,7 +105,7 @@ void InitWorldShaders()
 
 	colorShader = new Shader("shaders/colors.vs", "shaders/colors.fs");
 
-	universalShader = new Shader("shaders/universal_lit.vs", "shaders/universal_lit.fs");
+	universalShader = new Shader("shaders/basic_lighting.vs", "shaders/basic_lighting.fs");
 
 
 	std::cout << "World shaders initialized\n";
