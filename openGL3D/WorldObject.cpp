@@ -26,7 +26,8 @@ static Shader* GetShaderForObject(const WorldObject& obj, Camera& camera)
 		shader = colorShader;
 		shader->use();
 
-		shader->setVec3("objectColor", glm::vec3(0.5f));
+		shader->setVec3("objectColor", glm::vec3(1.0f));
+		shader->setVec3("lightColor", worldLight.diffuse);
 
 		SetWorldLightUniforms(*shader, camera);
 		break;
@@ -45,7 +46,8 @@ static Shader* GetShaderForObject(const WorldObject& obj, Camera& camera)
 		shader = colorShader;
 		shader->use();
 
-		shader->setVec3("objectColor", glm::vec3(0.5f));
+		shader->setVec3("objectColor", glm::vec3(1.0f));
+		shader->setVec3("lightColor", worldLight.diffuse);
 
 		SetWorldLightUniforms(*shader, camera);
 		break;

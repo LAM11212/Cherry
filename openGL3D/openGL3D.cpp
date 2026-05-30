@@ -29,7 +29,7 @@ unsigned int loadTexture(char const* path);
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
-bool DEBUG = false;
+bool DEBUG = true;
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));

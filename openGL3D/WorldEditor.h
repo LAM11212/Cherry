@@ -19,6 +19,7 @@ public:
 
 	std::vector<WorldObject>* EditableWorldObjects = nullptr;
 	WorldObject* selectedObject = nullptr;
+	bool isSelected = false;
 
 	WorldEditor(GLFWwindow* window) {
 		this->window = window;
@@ -100,9 +101,8 @@ public:
 	// the menu that will be used to spawn new objects into the engine.
 	void ObjectMenu() {
 		ImGui::Begin("ObjectMenu");
-		bool selected = false;
-		if(ImGui::Selectable("cube", selected)) {
-			selected = !selected;
+		if(ImGui::Selectable("cube", isSelected)) {
+			isSelected = !isSelected;
 			WorldFactory::createObject("cube");
 		}
 		ImGui::End();

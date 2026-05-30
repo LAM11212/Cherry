@@ -134,5 +134,7 @@ void WorldFactory::createObject(const std::string type) {
 		obj.transform.position = pos;
 		obj.material = MaterialType::Colored;
 		objects.push_back(obj);
+
+		// we need to somehow write this into the json file so that it persists.
 	}
 }
