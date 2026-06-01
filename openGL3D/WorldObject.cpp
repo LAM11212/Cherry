@@ -41,7 +41,6 @@ static Shader* GetShaderForObject(const WorldObject& obj, Camera& camera)
 		shader->setVec3("light.specular", worldLight.specular);
 		shader->setFloat("material.shininess", 32.0f);
 		break;
-
 	default:
 		shader = colorShader;
 		shader->use();

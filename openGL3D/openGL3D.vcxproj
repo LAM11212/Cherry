@@ -150,7 +150,6 @@
     <ClCompile Include="WorldEditor.cpp" />
     <ClCompile Include="WorldFactory.cpp" />
     <ClCompile Include="WorldObject.cpp" />
-    <ClCompile Include="WorldRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera\camera.h" />
