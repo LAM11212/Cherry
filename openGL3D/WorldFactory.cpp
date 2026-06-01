@@ -79,6 +79,7 @@ void WorldFactory::loadWorld(const std::string& path) {
 	if (objects.empty()) {
 		std::cerr << "No objects found in the json file: " << path << std::endl;
 	}
+	file.close();
 }
 
 unsigned int WorldFactory::loadTexture(char const* path) {
@@ -135,6 +136,17 @@ void WorldFactory::createObject(const std::string type) {
 		obj.material = MaterialType::Colored;
 		objects.push_back(obj);
 
-		// we need to somehow write this into the json file so that it persists.
+		std::ifstream in("world.json");
+		json worldData;
+		in >> worldData;
+		in.close();
+
+		worldData["objects"].push_back({
+			{"type", type},
+			{"position", {pos.x, pos.y, pos.z}}
+			});
+
+		std::ofstream out("world.json");
+		out << std::setw(4) << worldData;
 	}
 }
