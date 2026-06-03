@@ -16,6 +16,7 @@ static Shader* worldLightingShader = nullptr;
 void InitWorldShaders();
 void SetWorldLightUniforms(Shader& shader, const Camera& camera);
 
+/*This method returns the appropriate shader for a given WorldObject based on its material type.*/
 static Shader* GetShaderForObject(const WorldObject& obj, Camera& camera) 
 {
 	Shader* shader = nullptr;
@@ -55,6 +56,7 @@ static Shader* GetShaderForObject(const WorldObject& obj, Camera& camera)
 	return shader;
 }
 
+/*This method renders the WorldObject using the appropriate shader and transformation matrices.*/
 void WorldObject::Render(GLuint cubeVAO, const glm::mat4& projection, const glm::mat4& view, Camera& camera)
 {
 	Shader* shader = GetShaderForObject(*this, camera);

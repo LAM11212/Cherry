@@ -8,6 +8,7 @@
 using json = nlohmann::json;
 std::vector<WorldObject> objects;
 
+/*this method is responsible for creating a worldObject based on certain types, it also loads textures based on if the material requires that or not.*/
 WorldObject WorldFactory::fromPrefab(const std::string& type, const glm::vec3& position)
 {
 	WorldObject obj{};
@@ -50,6 +51,8 @@ WorldObject WorldFactory::fromPrefab(const std::string& type, const glm::vec3& p
 	return obj;
 }
 
+/*This method takes the world.json file and then parses it to create WorldObjects, it then those values are retrieved in openGL3D.cpp by doing
+  std::vector<WorldObject>& worldObjects = worldFactory.getObjects(); */
 void WorldFactory::loadWorld(const std::string& path) {
 	objects.clear();
 	std::ifstream file(path);
@@ -82,6 +85,7 @@ void WorldFactory::loadWorld(const std::string& path) {
 	file.close();
 }
 
+/*This method loads a texture from a file and returns the OpenGL texture ID.*/
 unsigned int WorldFactory::loadTexture(char const* path) {
 	unsigned int textureID;
 	glGenTextures(1, &textureID);
@@ -128,6 +132,7 @@ void WorldFactory::clearObjects() {
 	objects.clear();
 }
 
+/*This method creates a new object of the specified type and adds it to the world. It also updates the world.json file accordingly.*/
 void WorldFactory::createObject(const std::string type) {
 	if (type == "cube") {
 		glm::vec3 pos = { 0.0f, 0.0f, 0.0f };
