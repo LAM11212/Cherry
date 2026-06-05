@@ -155,3 +155,19 @@ void WorldFactory::createObject(const std::string type) {
 		out << std::setw(4) << worldData;
 	}
 }
+
+void WorldFactory::SaveChanges(const std::string& path) {
+	json worldData;
+	for (const WorldObject& obj : objects) {
+		worldData["objects"].push_back({
+			{"type", obj.type},
+			{"position", {obj.transform.position.x, obj.transform.position.y, obj.transform.position.z}}
+			}); 
+	}
+
+	std::ofstream o(path);
+
+	if (o) {
+		o << std::setw(4) << worldData << std::endl;
+	}
+}

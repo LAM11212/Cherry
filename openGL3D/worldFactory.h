@@ -13,4 +13,5 @@ public:
 	std::vector<WorldObject>& getObjects();
 	void clearObjects();
 	static void createObject(const std::string type);
+	void SaveChanges(const std::string& path);
 };

@@ -160,6 +160,7 @@ int main()
     Shader pyramidShader("shaders/pyramid.vs", "shaders/pyramid.fs");
 	Shader worldLightingShader("shaders/light_casters.vs", "shaders/light_casters.fs");
 
+
     Model Gun("models/futuristic-sci-fi-glock/source/ASM - PBR Metallic Roughness/ASM - PBR Metallic Roughness.fbx");
 
     if (Gun.meshes.empty())
@@ -170,6 +171,7 @@ int main()
     {
         std::cout << "Loaded model with: " << Gun.meshes.size() << " meshes\n";
     }
+
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
@@ -332,12 +334,13 @@ int main()
     unsigned int bgTexture = loadTexture("textures/liminalBG.jpg");
 
     // GUN TEXTURE
-	unsigned int gunTexture = loadTexture("models/futuristic-sci-fi-glock/textures/Stylized glock_Empty_BaseColor.png");
-    gunShader.use();
-    gunShader.setInt("texture_diffuse1", 0);
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, gunTexture);
+    if (!DEBUG) {
+        unsigned int gunTexture = loadTexture("models/futuristic-sci-fi-glock/textures/Stylized glock_Empty_BaseColor.png");
+        gunShader.use();
+        gunShader.setInt("texture_diffuse1", 0);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, gunTexture);
+    }
 
 
     //Gun.Draw(gunShader);
@@ -408,9 +411,35 @@ int main()
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
 
-		gunShader.use();
-		gunShader.setMat4("projection", projection);
-		gunShader.setMat4("view", view);
+        if (!DEBUG) {
+            gunShader.use();
+            gunShader.setMat4("projection", projection);
+            gunShader.setMat4("view", view);
+
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, glm::vec3(camera.Position));
+
+            // apply camera rotation
+            glm::mat4 rotation = glm::mat4(1.0f);
+            rotation[0] = glm::vec4(camera.Right, 0.0f);
+            rotation[1] = glm::vec4(camera.Up, 0.0f);
+            rotation[2] = glm::vec4(-camera.Front, 0.0f);
+            model *= rotation;
+
+            // offset
+            glm::vec3 offset = glm::vec3(0.3f, -0.3f, -0.7f);
+            model = glm::translate(model, offset);
+
+            //fix rotation
+            model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+
+            // scale down
+            model = glm::scale(model, glm::vec3(0.0009f));
+
+            gunShader.use();
+            gunShader.setMat4("model", model);
+            Gun.Draw(gunShader);
+        }
 
   //      pyramidShader.use();
 		//pyramidShader.setMat4("projection", projection);
@@ -434,30 +463,6 @@ int main()
   //      glDrawArrays(GL_TRIANGLES, 0, 18);
 
         //load our gun model and move to camera position
-        gunShader.use();
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(camera.Position));
-
-        // apply camera rotation
-        glm::mat4 rotation = glm::mat4(1.0f);
-		rotation[0] = glm::vec4(camera.Right, 0.0f);
-		rotation[1] = glm::vec4(camera.Up, 0.0f);
-		rotation[2] = glm::vec4(-camera.Front, 0.0f);
-        model *= rotation;
-
-        // offset
-        glm::vec3 offset = glm::vec3(0.3f, -0.3f, -0.7f);
-        model = glm::translate(model, offset);
-
-        //fix rotation
-		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-
-        // scale down
-        model = glm::scale(model, glm::vec3(0.0009f));
-
-        gunShader.use();
-		gunShader.setMat4("model", model);
-		Gun.Draw(gunShader);
 
         // custom view/projection transformations
         for (auto& obj : worldObjects) {
@@ -488,6 +493,8 @@ int main()
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
+    // save changes to world.json on exit
+    worldFactory.SaveChanges("world.json");
 
     // optional: de-allocate all resources once they've outlived their purpose:
     // ------------------------------------------------------------------------
