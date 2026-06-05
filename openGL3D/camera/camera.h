@@ -11,7 +11,9 @@ enum Camera_Movement {
 	FORWARD,
 	BACKWARD,
 	LEFT,
-	RIGHT
+	RIGHT,
+	ASCEND,
+	DESCEND
 };
 
 //default camera values:
@@ -66,7 +68,8 @@ public:
 	}
 
 	// processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
-	void ProcessKeyboard(Camera_Movement direction, float deltaTime) {
+	void ProcessKeyboard(Camera_Movement direction, float deltaTime, bool DEBUG) {
+		if (DEBUG) return; // we want to use DebugProcessKeyboard in Opengl3d.cpp for debug mode so we can fly around instead of walking.
 		float velocity = MoveSpeed * deltaTime;
 		if (direction == FORWARD)
 			Position += Front * velocity;
@@ -80,14 +83,34 @@ public:
 			Position.y = groundHeight;
 	}
 
-	void HandleJump(float deltaTime) {
+	void DebugProcessKeyboard(Camera_Movement direction, float deltaTime, bool DEBUG) {
+		if (DEBUG) {
+			float velocity = MoveSpeed * deltaTime;
+			if (direction == FORWARD)
+				Position += Front * velocity;
+			if (direction == BACKWARD)
+				Position -= Front * velocity;
+			if (direction == LEFT)
+				Position -= glm::normalize(glm::cross(Front, Up)) * velocity;
+			if (direction == RIGHT)
+				Position += glm::normalize(glm::cross(Front, Up)) * velocity;
+			if (direction == ASCEND)
+				Position += Up * velocity;
+			if (direction == DESCEND)
+				Position -= Up * velocity;
+		}
+	}
+
+	void HandleJump(float deltaTime, bool DEBUG) {
+		if (DEBUG) return;
 		if (!isJumping) {
 			isJumping = true;
 			verticalVelocity = 5.0f;
 		}
 	}
 
-	void updatePhysics(float deltaTime) {
+	void updatePhysics(float deltaTime, bool DEBUG) {
+		if (DEBUG) return;
 		if (isJumping) {
 
 			// apply gravity
