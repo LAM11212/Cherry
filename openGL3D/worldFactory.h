@@ -14,4 +14,6 @@ public:
 	void clearObjects();
 	static void createObject(const std::string type);
 	void SaveChanges(const std::string& path);
+private:
+	int nextObjectID = 1;
 };

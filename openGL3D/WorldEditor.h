@@ -20,6 +20,9 @@ public:
 	std::vector<WorldObject>* EditableWorldObjects = nullptr;
 	WorldObject* selectedObject = nullptr;
 	bool isSelected = false;
+	int cubeCount = 0;
+	int wallCount = 0;
+	int floorCount = 0;
 
 	WorldEditor(GLFWwindow* window) {
 		this->window = window;
@@ -55,8 +58,7 @@ public:
 		for (int i = 0; i < EditableWorldObjects->size(); i++) {
 			WorldObject& obj = (*EditableWorldObjects)[i];
 			const bool selected = (selectedObject == &obj);
-
-			std::string label = obj.type + "##" + std::to_string(i);
+			std::string label = obj.name + "##" + std::to_string(i);
 
 			if (ImGui::Selectable(label.c_str(), selected)) {
 				selectedObject = &obj;
@@ -89,6 +91,14 @@ public:
 
 			ImGui::DragFloat3("Rotation", &selectedObject->transform.rotation.x, 1.0f);
 			ImGui::DragFloat3("Scale", &selectedObject->transform.scale.x, 0.1f, 0.01f, 100.0f);
+
+			static char buffer[256];
+			strncpy_s(buffer, sizeof(buffer), selectedObject->name.c_str(), _TRUNCATE);
+			buffer[sizeof(buffer) - 1] = '\0';
+
+			if (ImGui::InputText("Name", buffer, sizeof(buffer))) {
+				selectedObject->name = std::string(buffer);
+			}
 
 
 		}   else {

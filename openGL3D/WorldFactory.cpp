@@ -13,6 +13,7 @@ WorldObject WorldFactory::fromPrefab(const std::string& type, const glm::vec3& p
 {
 	WorldObject obj{};
 	obj.type = type;
+	obj.name = type;
 
 	obj.transform.position = position;
 

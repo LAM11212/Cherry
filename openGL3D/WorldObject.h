@@ -13,6 +13,7 @@ class Camera;
 //void SetBasicShaderUniforms(Shader& shader, bool flashLight, const Camera& camera);
 
 struct WorldObject {
+    std::string name;
     std::string type;          
     Transform transform;
 
